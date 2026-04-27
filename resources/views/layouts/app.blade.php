@@ -156,7 +156,7 @@
                 </div>
             </div>
 
-            <!-- MOBILE MENU (dengan dropdown) -->
+            <!-- MOBILE MENU -->
             <div id="mobile-menu" class="hidden md:hidden pb-4 space-y-2">
                 <a href="{{ url('/') }}"
                     class="block text-white/80 hover:text-white hover:bg-white/10 px-3 py-2 rounded-lg transition">Beranda</a>

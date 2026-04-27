@@ -16,7 +16,7 @@
                 Mencetak Generasi yang Beriman, Berilmu, dan Berakhlak Mulia
             </p>
             <div class="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="{{ url('/profil') }}" class="bg-white text-primary px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition shadow-lg inline-block">
+                <a href="{{ url('/profil/sejarah') }}" class="bg-white text-primary px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition shadow-lg inline-block">
                     Pelajari Lebih Lanjut
                 </a>
                 <a href="{{ url('/ppdb') }}" class="bg-primaryLight text-white px-8 py-3 rounded-full font-semibold hover:bg-green-600 transition shadow-lg inline-block">

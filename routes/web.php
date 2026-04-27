@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\Admin\MetaController;
+use App\Http\Controllers\Admin\PostCategoryController;
+use App\Http\Controllers\Admin\PostController;
+
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -22,7 +26,6 @@ Route::get('/profil/struktur', function () {
 Route::get('/profil/sambutan', function () {
     return view('profil.sambutan');
 })->name('profil.sambutan');
-
 
 // Akademik Routes
 Route::get('/akademik', function () {
@@ -47,59 +50,74 @@ Route::get('/fasilitas/detail/{slug}', function ($slug) {
         'masjid' => [
             'title' => 'Masjid',
             'icon' => 'fas fa-mosque',
-            'description' => 'Masjid Al-Hikmah adalah masjid utama Pondok Pesantren Roudlotut Tullab. Dengan kapasitas 1000 jamaah, masjid ini dilengkapi dengan pendingin ruangan, sound system yang baik, dan area wudhu yang luas. Digunakan untuk shalat berjamaah, kajian kitab, dan kegiatan keagamaan lainnya.'
+            'description' => 'Masjid Al-Hikmah adalah masjid utama Pondok Pesantren Roudlotut Tullab. Dengan kapasitas 1000 jamaah, masjid ini dilengkapi dengan pendingin ruangan, sound system yang baik, dan area wudhu yang luas. Digunakan untuk shalat berjamaah, kajian kitab, dan kegiatan keagamaan lainnya.',
         ],
         'asrama' => [
             'title' => 'Asrama',
             'icon' => 'fas fa-bed',
-            'description' => 'Asrama pondok terbagi menjadi asrama putra dan asrama putri. Setiap asrama dilengkapi dengan fasilitas kamar tidur yang nyaman, kamar mandi dalam, ruang belajar bersama, dan area bermain. Kapasitas asrama mencapai 300 santri.'
+            'description' => 'Asrama pondok terbagi menjadi asrama putra dan asrama putri. Setiap asrama dilengkapi dengan fasilitas kamar tidur yang nyaman, kamar mandi dalam, ruang belajar bersama, dan area bermain. Kapasitas asrama mencapai 300 santri.',
         ],
         'perpustakaan' => [
             'title' => 'Perpustakaan',
             'icon' => 'fas fa-book',
-            'description' => 'Perpustakaan pondok memiliki koleksi lebih dari 5000 buku, terdiri dari kitab kuning, buku agama, buku umum, dan referensi lainnya. Perpustakaan buka setiap hari dan dilengkapi dengan ruang baca yang nyaman.'
+            'description' => 'Perpustakaan pondok memiliki koleksi lebih dari 5000 buku, terdiri dari kitab kuning, buku agama, buku umum, dan referensi lainnya. Perpustakaan buka setiap hari dan dilengkapi dengan ruang baca yang nyaman.',
         ],
         'laboratorium' => [
             'title' => 'Laboratorium',
             'icon' => 'fas fa-flask',
-            'description' => 'Laboratorium komputer dan bahasa tersedia untuk menunjang pembelajaran santri. Dilengkapi dengan 30 unit komputer, akses internet, dan perangkat laboratorium bahasa untuk praktik belajar.'
+            'description' => 'Laboratorium komputer dan bahasa tersedia untuk menunjang pembelajaran santri. Dilengkapi dengan 30 unit komputer, akses internet, dan perangkat laboratorium bahasa untuk praktik belajar.',
         ],
         'kantin' => [
             'title' => 'Kantin & Dapur Umum',
             'icon' => 'fas fa-utensils',
-            'description' => 'Kantin dan dapur umum menyediakan makanan sehat dan bergizi untuk santri setiap hari. Menu makanan bervariasi dan disesuaikan dengan kebutuhan gizi santri.'
+            'description' => 'Kantin dan dapur umum menyediakan makanan sehat dan bergizi untuk santri setiap hari. Menu makanan bervariasi dan disesuaikan dengan kebutuhan gizi santri.',
         ],
         'klinik' => [
             'title' => 'Klinik Kesehatan',
             'icon' => 'fas fa-hospital-user',
-            'description' => 'Klinik kesehatan pondok buka 24 jam untuk melayani santri yang sakit. Dilengkapi dengan dokter dan perawat yang siap melayani, serta apotek kecil untuk obat-obatan dasar.'
+            'description' => 'Klinik kesehatan pondok buka 24 jam untuk melayani santri yang sakit. Dilengkapi dengan dokter dan perawat yang siap melayani, serta apotek kecil untuk obat-obatan dasar.',
         ],
         'lapangan' => [
             'title' => 'Lapangan Olahraga',
             'icon' => 'fas fa-futbol',
-            'description' => 'Lapangan olahraga tersedia untuk futsal, basket, voli, dan bulutangkis. Fasilitas ini digunakan untuk kegiatan ekstrakurikuler dan olahraga rutin santri.'
+            'description' => 'Lapangan olahraga tersedia untuk futsal, basket, voli, dan bulutangkis. Fasilitas ini digunakan untuk kegiatan ekstrakurikuler dan olahraga rutin santri.',
         ],
         'ruang-kelas' => [
             'title' => 'Ruang Kelas',
             'icon' => 'fas fa-chalkboard-user',
-            'description' => 'Ruang kelas yang nyaman dengan kapasitas 30 santri per kelas. Setiap kelas dilengkapi dengan papan tulis, meja dan kursi yang nyaman, serta sirkulasi udara yang baik.'
+            'description' => 'Ruang kelas yang nyaman dengan kapasitas 30 santri per kelas. Setiap kelas dilengkapi dengan papan tulis, meja dan kursi yang nyaman, serta sirkulasi udara yang baik.',
         ],
         'aula' => [
             'title' => 'Aula',
             'icon' => 'fas fa-building',
-            'description' => 'Aula serbaguna dengan kapasitas 500 orang digunakan untuk acara pondok, seminar, dan kegiatan besar lainnya. Dilengkapi dengan sound system dan pendingin ruangan.'
+            'description' => 'Aula serbaguna dengan kapasitas 500 orang digunakan untuk acara pondok, seminar, dan kegiatan besar lainnya. Dilengkapi dengan sound system dan pendingin ruangan.',
         ],
     ];
 
-    if (!isset($fasilitas[$slug])) {
+    if (! isset($fasilitas[$slug])) {
         abort(404);
     }
 
     return view('fasilitas.detail', $fasilitas[$slug]);
 })->name('fasilitas.detail');
 
-
 // Kontak Routes
 Route::get('/kontak', function () {
     return view('kontak');
 })->name('kontak');
+
+// Admin routes
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', function () {
+        return view('admin.dashboard');
+    })->name('dashboard');
+
+    Route::get('/meta/{group}', [MetaController::class, 'index'])->name('meta.index');
+    Route::get('/meta/edit/{id}', [MetaController::class, 'edit'])->name('meta.edit');
+    Route::post('/meta/update/{id}', [MetaController::class, 'update'])->name('meta.update');
+    Route::get('/meta/create/{group}', [MetaController::class, 'create'])->name('meta.create');
+    Route::post('/meta/store', [MetaController::class, 'store'])->name('meta.store');
+
+    Route::resource('categories', PostCategoryController::class);
+    Route::resource('posts', PostController::class);
+});
