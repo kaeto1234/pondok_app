@@ -73,7 +73,7 @@
                     <h2 class="text-sm uppercase tracking-wider text-white/50 mb-2">Menu Utama</h2>
                     <ul class="space-y-1">
                         <li>
-                            <a href="{{ url('/admin/dashboard') }}"
+                            <a href="{{ route('admin.dashboard') }}"
                                 class="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-[#2a4a7a] transition">
                                 <i class="fas fa-tachometer-alt w-5"></i>
                                 <span>Dashboard</span>
@@ -100,31 +100,10 @@
                             </a>
                         </li>
                         <li>
-                            <a href="{{ url('/admin/meta/profil') }}"
+                            <a href="{{ route('admin.menus.index') }}"
                                 class="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-[#2a4a7a] transition">
-                                <i class="fas fa-building w-5"></i>
-                                <span>Profil Pondok</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ url('/admin/meta/kontak') }}"
-                                class="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-[#2a4a7a] transition">
-                                <i class="fas fa-address-card w-5"></i>
-                                <span>Kontak</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ url('/admin/akademik') }}"
-                                class="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-[#2a4a7a] transition">
-                                <i class="fas fa-graduation-cap w-5"></i>
-                                <span>Akademik</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ url('/admin/fasilitas') }}"
-                                class="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-[#2a4a7a] transition">
-                                <i class="fas fa-building w-5"></i>
-                                <span>Fasilitas</span>
+                                <i class="fas fa-bars w-5"></i>
+                                <span>Menu Navigasi</span>
                             </a>
                         </li>
                     </ul>

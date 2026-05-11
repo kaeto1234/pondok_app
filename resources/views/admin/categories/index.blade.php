@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Manajemen Kategori')
+@section('title', 'Kategori')
 
 @section('content')
 <div class="flex justify-between items-center mb-6">
@@ -18,6 +18,7 @@
                 <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600">Slug</th>
                 <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600">Deskripsi</th>
                 <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600">Aksi</th>
+            
         </thead>
         <tbody>
             @foreach($categories as $cat)
@@ -32,7 +33,7 @@
                         @method('DELETE')
                         <button type="submit" class="text-red-600 hover:underline" onclick="return confirm('Yakin?')">Hapus</button>
                     </form>
-                 </td>
+                </td>
             </tr>
             @endforeach
         </tbody>

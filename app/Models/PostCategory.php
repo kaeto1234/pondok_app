@@ -8,4 +8,9 @@ class PostCategory extends Model
 {
     protected $table = 'post_categories';
     protected $fillable = ['name', 'slug', 'description', 'icon'];
+
+        public function posts()
+    {
+        return $this->hasMany(Post::class, 'post_category_id');
+    }
 }

@@ -5,22 +5,23 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Post;
 use App\Models\PostCategory;
-use App\Models\PostGallery;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
     public function index()
     {
         $posts = Post::with('category')->orderBy('created_at', 'desc')->get();
+
         return view('admin.posts.index', compact('posts'));
     }
 
     public function create()
     {
         $categories = PostCategory::all();
+
         return view('admin.posts.create', compact('categories'));
     }
 
@@ -34,14 +35,16 @@ class PostController extends Controller
             'featured_image' => 'nullable|image|max:2048',
         ]);
 
+        // Generate slug unik
         $slug = Str::slug($request->title);
         $originalSlug = $slug;
         $count = 1;
         while (Post::where('slug', $slug)->exists()) {
-            $slug = $originalSlug . '-' . $count;
+            $slug = $originalSlug.'-'.$count;
             $count++;
         }
 
+        // Upload gambar
         $featuredImage = null;
         if ($request->hasFile('featured_image')) {
             $file = $request->file('featured_image');
@@ -53,7 +56,7 @@ class PostController extends Controller
             'content' => $request->content,
             'post_type' => $request->post_type,
             'post_category_id' => $request->post_category_id,
-            'author_id' => Auth::id(),
+            'author_id' => Auth::id() ?? 1, // ← default 1 jika tidak login
             'published_at' => $request->published_at ?? now(),
             'slug' => $slug,
             'featured_image' => $featuredImage,
@@ -66,6 +69,7 @@ class PostController extends Controller
     {
         $post = Post::findOrFail($id);
         $categories = PostCategory::all();
+
         return view('admin.posts.edit', compact('post', 'categories'));
     }
 
@@ -84,6 +88,7 @@ class PostController extends Controller
             'content' => $request->content,
             'post_type' => $request->post_type,
             'post_category_id' => $request->post_category_id,
+            'author_id' => Auth::id() ?? 1, // ← default 1 jika tidak login
             'published_at' => $request->published_at ?? now(),
             'featured_image' => $featuredImage,
         ]);
@@ -94,8 +99,8 @@ class PostController extends Controller
     public function destroy($id)
     {
         $post = Post::findOrFail($id);
-        PostGallery::where('post_id', $id)->delete();
         $post->delete();
+
         return redirect()->route('admin.posts.index')->with('success', 'Post berhasil dihapus');
     }
 }

@@ -9,8 +9,6 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-
-    <!-- Custom CSS untuk mengatasi Tailwind CDN + dark mode -->
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -30,7 +28,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <style>
-        /* Custom animations */
         .hover-scale {
             transition: transform 0.3s ease;
         }
@@ -68,87 +65,69 @@
 
                 <!-- LOGO -->
                 <div class="flex items-center space-x-3 flex-shrink-0 mr-8">
-                    <img src="{{ asset('asset/logo_ponpes.png') }}" alt="Logo Ponpes Roudlotut Tullab" class="h-20 w-auto">
+                    <img src="{{ asset('asset/logo_ponpes.png') }}" alt="Logo Ponpes Roudlotut Tullab"
+                        class="h-20 w-auto">
                     <span class="text-white font-bold text-xl whitespace-nowrap">Roudlotut Tullab</span>
                 </div>
 
-                <!-- DESKTOP MENU (dengan dropdown) -->
+                <!-- DESKTOP MENU -->
                 <div class="hidden md:flex items-center space-x-1">
+                    <!-- Beranda (Hardcode dulu) -->
                     <a href="{{ url('/') }}"
                         class="text-white/80 hover:text-white hover:bg-white/10 px-3 py-2 rounded-lg transition text-sm">Beranda</a>
 
-                    <!-- Dropdown Profil -->
-                    <div class="relative group">
-                        <a href="#"
-                            class="text-white/80 hover:text-white hover:bg-white/10 px-3 py-2 rounded-lg transition text-sm inline-flex items-center">
-                            Profil
-                            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </a>
-                        <div
-                            class="absolute left-0 mt-1 w-56 bg-white dark:bg-gray-800 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                            <div class="py-2">
-                                <a href="{{ url('/profil/sejarah') }}"
-                                    class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">Sejarah</a>
-                                <a href="{{ url('/profil/visi-misi') }}"
-                                    class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">Visi
-                                    & Misi</a>
-                                <a href="{{ url('/profil/struktur') }}"
-                                    class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">Struktur
-                                    Organisasi</a>
-                                <a href="{{ url('/profil/sambutan') }}"
-                                    class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">Sambutan
-                                    Pimpinan</a>
-                            </div>
-                        </div>
-                    </div>
+                    @php
+                        $menus = App\Models\Menu::with(['children', 'post', 'link'])
+                            ->whereNull('parent_id')
+                            ->where('is_active', true)
+                            ->orderBy('order')
+                            ->get();
+                    @endphp
 
-                    <!-- Dropdown Akademik -->
-                    <div class="relative group">
-                        <a href="#"
-                            class="text-white/80 hover:text-white hover:bg-white/10 px-3 py-2 rounded-lg transition text-sm inline-flex items-center">
-                            Akademik
-                            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </a>
-                        <div
-                            class="absolute left-0 mt-1 w-56 bg-white dark:bg-gray-800 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                            <div class="py-2">
-                                <a href="{{ url('/akademik/program') }}"
-                                    class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">Program
-                                    Diniyah</a>
-                                <a href="{{ url('/akademik/mapel') }}"
-                                    class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">Mata
-                                    Pelajaran</a>
+                    @foreach ($menus as $menu)
+                        @if ($menu->children->count() > 0)
+                            <!-- Dropdown Menu -->
+                            <div class="relative group">
+                                <a href="#"
+                                    class="text-white/80 hover:text-white hover:bg-white/10 px-3 py-2 rounded-lg transition text-sm inline-flex items-center">
+                                    {{ $menu->label }}
+                                    <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M19 9l-7 7-7-7"></path>
+                                    </svg>
+                                </a>
+                                <div
+                                    class="absolute left-0 mt-1 w-56 bg-white dark:bg-gray-800 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                                    <div class="py-2">
+                                        @foreach ($menu->children as $child)
+                                            <a href="{{ $child->link ? $child->link->url : url('/' . ($child->post->post->slug ?? '')) }}"
+                                                class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                                {{ $child->label }}
+                                            </a>
+                                        @endforeach
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-
-                    <a href="{{ url('/fasilitas') }}"
-                        class="text-white/80 hover:text-white hover:bg-white/10 px-3 py-2 rounded-lg transition text-sm">Fasilitas</a>
-                    <a href="{{ url('/berita') }}"
-                        class="text-white/80 hover:text-white hover:bg-white/10 px-3 py-2 rounded-lg transition text-sm">Berita</a>
-                    <a href="{{ url('/kontak') }}"
-                        class="text-white/80 hover:text-white hover:bg-white/10 px-3 py-2 rounded-lg transition text-sm">Kontak</a>
+                        @else
+                            <!-- Single Menu -->
+                            <a href="{{ $menu->link ? $menu->link->url : url('/' . ($menu->post->post->slug ?? '')) }}"
+                                class="text-white/80 hover:text-white hover:bg-white/10 px-3 py-2 rounded-lg transition text-sm">
+                                {{ $menu->label }}
+                            </a>
+                        @endif
+                    @endforeach
                 </div>
 
                 <!-- RIGHT SECTION -->
                 <div class="flex items-center space-x-3 flex-shrink-0">
-
                     <a href="{{ url('/ppdb') }}"
                         class="hidden md:block bg-white text-[#166534] px-4 py-1.5 rounded-lg font-semibold text-sm hover:bg-gray-100 transition shadow-md">
                         PPDB
                     </a>
-
                     <button id="darkModeToggle"
                         class="text-white text-lg focus:outline-none hover:bg-white/10 p-2 rounded-lg transition">
                         <i id="darkModeIcon" class="fas fa-moon"></i>
                     </button>
-
                     <button id="mobile-menu-button"
                         class="md:hidden text-white focus:outline-none hover:bg-white/10 p-2 rounded-lg transition">
                         <i class="fas fa-bars text-xl"></i>
@@ -161,40 +140,36 @@
                 <a href="{{ url('/') }}"
                     class="block text-white/80 hover:text-white hover:bg-white/10 px-3 py-2 rounded-lg transition">Beranda</a>
 
-                <!-- Mobile Dropdown Profil -->
-                <div x-data="{ open: false }" class="w-full">
-                    <button @click="open = !open"
-                        class="w-full text-left text-white/80 hover:text-white hover:bg-white/10 px-3 py-2 rounded-lg transition flex justify-between items-center">
-                        Profil
-                        <svg :class="{ 'rotate-180': open }" class="w-4 h-4 transition-transform" fill="none"
-                            stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
-                            </path>
-                        </svg>
-                    </button>
-                    <div x-show="open" class="ml-4 space-y-1" x-cloak>
-                        <a href="{{ url('/profil/sejarah') }}"
-                            class="block text-white/80 hover:text-white hover:bg-white/10 px-3 py-2 rounded-lg transition text-sm">Sejarah</a>
-                        <a href="{{ url('/profil/visi-misi') }}"
-                            class="block text-white/80 hover:text-white hover:bg-white/10 px-3 py-2 rounded-lg transition text-sm">Visi
-                            & Misi</a>
-                        <a href="{{ url('/profil/struktur') }}"
-                            class="block text-white/80 hover:text-white hover:bg-white/10 px-3 py-2 rounded-lg transition text-sm">Struktur
-                            Organisasi</a>
-                        <a href="{{ url('/profil/sambutan') }}"
-                            class="block text-white/80 hover:text-white hover:bg-white/10 px-3 py-2 rounded-lg transition text-sm">Sambutan
-                            Pimpinan</a>
-                    </div>
-                </div>
+                @foreach ($menus as $menu)
+                    @if ($menu->children->count() > 0)
+                        <!-- Mobile Dropdown -->
+                        <div x-data="{ open: false }" class="w-full">
+                            <button @click="open = !open"
+                                class="w-full text-left text-white/80 hover:text-white hover:bg-white/10 px-3 py-2 rounded-lg transition flex justify-between items-center">
+                                {{ $menu->label }}
+                                <svg :class="{ 'rotate-180': open }" class="w-4 h-4 transition-transform" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                            <div x-show="open" class="ml-4 space-y-1" x-cloak>
+                                @foreach ($menu->children as $child)
+                                    <a href="{{ $child->link ? $child->link->url : url('/' . ($child->post->post->slug ?? '')) }}"
+                                        class="block text-white/80 hover:text-white hover:bg-white/10 px-3 py-2 rounded-lg transition text-sm">
+                                        {{ $child->label }}
+                                    </a>
+                                @endforeach
+                            </div>
+                        </div>
+                    @else
+                        <a href="{{ $menu->link ? $menu->link->url : url('/' . ($menu->post->post->slug ?? '')) }}"
+                            class="block text-white/80 hover:text-white hover:bg-white/10 px-3 py-2 rounded-lg transition">
+                            {{ $menu->label }}
+                        </a>
+                    @endif
+                @endforeach
 
-                <a href="{{ url('/akademik') }}"
-                    class="block text-white/80 hover:text-white hover:bg-white/10 px-3 py-2 rounded-lg transition">Akademik</a>
-                <a href="{{ url('/fasilitas') }}"
-                    class="block text-white/80 hover:text-white hover:bg-white/10 px-3 py-2 rounded-lg transition">Fasilitas</a>
-                <a href="{{ url('/berita') }}"
-                    class="block text-white/80 hover:text-white hover:bg-white/10 px-3 py-2 rounded-lg transition">Berita</a>
-                <a href="{{ url('/kontak') }}"
-                    class="block text-white/80 hover:text-white hover:bg-white/10 px-3 py-2 rounded-lg transition">Kontak</a>
                 <a href="{{ url('/ppdb') }}"
                     class="block bg-white text-[#166534] px-4 py-2 rounded-lg font-semibold text-center mt-2">PPDB</a>
             </div>
@@ -210,56 +185,90 @@
     <footer class="bg-gray-900 text-white mt-20">
         <div class="container mx-auto px-4 py-12">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <!-- Kolom 1: Logo & Deskripsi -->
                 <div>
                     <div class="flex items-center space-x-2 mb-4">
                         <i class="fas fa-mosque text-2xl text-primaryLight"></i>
-                        <span class="font-bold text-xl">Ponpes Roudlotut Tullab</span>
+                        @if ($footerLogo)
+                            <span class="font-bold text-xl">{{ $footerLogo->content }}</span>
+                        @else
+                            <span class="font-bold text-xl">Ponpes Roudlotut Tullab</span>
+                        @endif
                     </div>
-                    <p class="text-gray-400 text-sm">
-                        Mencetak generasi yang beriman, berilmu, dan berakhlak mulia.
-                    </p>
+                    @if ($footerDesc)
+                        <p class="text-gray-400 text-sm">{{ $footerDesc->content }}</p>
+                    @endif
                 </div>
+
+                <!-- Kolom 2: Tautan Cepat (dari menu) -->
                 <div>
                     <h4 class="font-semibold text-lg mb-4">Tautan Cepat</h4>
                     <ul class="space-y-2 text-gray-400 text-sm">
-                        <li><a href="{{ url('/profil') }}" class="hover:text-primaryLight transition">Profil</a></li>
-                        <li><a href="{{ url('/akademik') }}" class="hover:text-primaryLight transition">Akademik</a>
-                        </li>
-                        <li><a href="{{ url('/fasilitas') }}"
-                                class="hover:text-primaryLight transition">Fasilitas</a></li>
-                        <li><a href="{{ url('/berita') }}" class="hover:text-primaryLight transition">Berita</a></li>
-                        <li><a href="{{ url('/kontak') }}" class="hover:text-primaryLight transition">Kontak</a></li>
-                        <li><a href="{{ url('/ppdb') }}" class="hover:text-primaryLight transition">PPDB</a></li>
+                        @foreach ($quickLinks as $link)
+                            @php
+                                $url = $link->link
+                                    ? $link->link->url
+                                    : ($link->post
+                                        ? url('/' . $link->post->post->slug)
+                                        : '#');
+                            @endphp
+                            <li>
+                                <a href="{{ $url }}"
+                                    class="hover:text-primaryLight transition">{{ $link->label }}</a>
+                            </li>
+                        @endforeach
                     </ul>
                 </div>
+
+                <!-- Kolom 3: Kontak -->
                 <div>
                     <h4 class="font-semibold text-lg mb-4">Kontak</h4>
                     <ul class="space-y-2 text-gray-400 text-sm">
-                        <li><i class="fas fa-map-marker-alt w-5 text-primaryLight"></i> Jl. Pesantren No. 1, Bogor</li>
-                        <li><i class="fas fa-phone w-5 text-primaryLight"></i> (021) 1234567</li>
-                        <li><i class="fab fa-whatsapp w-5 text-primaryLight"></i> 0812-3456-7890</li>
-                        <li><i class="fas fa-envelope w-5 text-primaryLight"></i> info@ponpes.sch.id</li>
+                        @if ($footerAlamat)
+                            <li><i class="fas fa-map-marker-alt w-5 text-primaryLight"></i>
+                                {{ $footerAlamat->content }}</li>
+                        @endif
+                        @if ($footerTelepon)
+                            <li><i class="fas fa-phone w-5 text-primaryLight"></i> {{ $footerTelepon->content }}</li>
+                        @endif
+                        @if ($footerWhatsapp)
+                            <li><i class="fab fa-whatsapp w-5 text-primaryLight"></i> {{ $footerWhatsapp->content }}
+                            </li>
+                        @endif
+                        @if ($footerEmail)
+                            <li><i class="fas fa-envelope w-5 text-primaryLight"></i> {{ $footerEmail->content }}</li>
+                        @endif
                     </ul>
                 </div>
+
+                <!-- Kolom 4: Media Sosial -->
                 <div>
                     <h4 class="font-semibold text-lg mb-4">Media Sosial</h4>
                     <div class="flex space-x-4">
-                        <a href="#"
-                            class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center text-gray-400 hover:bg-primaryLight hover:text-white transition">
-                            <i class="fab fa-facebook-f"></i>
-                        </a>
-                        <a href="#"
-                            class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center text-gray-400 hover:bg-primaryLight hover:text-white transition">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                        <a href="#"
-                            class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center text-gray-400 hover:bg-primaryLight hover:text-white transition">
-                            <i class="fab fa-youtube"></i>
-                        </a>
-                        <a href="#"
-                            class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center text-gray-400 hover:bg-primaryLight hover:text-white transition">
-                            <i class="fab fa-twitter"></i>
-                        </a>
+                        @if ($footerFacebook)
+                            <a href="{{ $footerFacebook->content }}" target="_blank"
+                                class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center text-gray-400 hover:bg-primaryLight hover:text-white transition">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                        @endif
+                        @if ($footerInstagram)
+                            <a href="{{ $footerInstagram->content }}" target="_blank"
+                                class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center text-gray-400 hover:bg-primaryLight hover:text-white transition">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                        @endif
+                        @if ($footerYoutube)
+                            <a href="{{ $footerYoutube->content }}" target="_blank"
+                                class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center text-gray-400 hover:bg-primaryLight hover:text-white transition">
+                                <i class="fab fa-youtube"></i>
+                            </a>
+                        @endif
+                        @if ($footerTwitter)
+                            <a href="{{ $footerTwitter->content }}" target="_blank"
+                                class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center text-gray-400 hover:bg-primaryLight hover:text-white transition">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -269,16 +278,11 @@
         </div>
     </footer>
 
-
-
-    <!-- Scripts -->
     <script>
-        // Dark Mode Toggle
         const darkModeToggle = document.getElementById('darkModeToggle');
         const html = document.documentElement;
         const icon = document.getElementById('darkModeIcon');
 
-        // Check localStorage for theme preference
         if (localStorage.getItem('theme') === 'dark') {
             html.classList.add('dark');
             icon.classList.remove('fa-moon');
@@ -298,7 +302,6 @@
             }
         });
 
-        // Mobile Menu Toggle
         const menuButton = document.getElementById('mobile-menu-button');
         const mobileMenu = document.getElementById('mobile-menu');
         menuButton.addEventListener('click', () => {

@@ -46,6 +46,7 @@ class PostCategoryController extends Controller
     public function update(Request $request, $id)
     {
         $category = PostCategory::findOrFail($id);
+        
         $category->update([
             'name' => $request->name,
             'slug' => Str::slug($request->name),
@@ -59,7 +60,11 @@ class PostCategoryController extends Controller
     public function destroy($id)
     {
         $category = PostCategory::findOrFail($id);
+        
+        // Hapus semua post dalam kategori ini
+        $category->posts()->delete();
         $category->delete();
+        
         return redirect()->route('admin.categories.index')->with('success', 'Kategori berhasil dihapus');
     }
 }
