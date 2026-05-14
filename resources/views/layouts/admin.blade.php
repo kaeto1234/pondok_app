@@ -106,6 +106,13 @@
                                 <span>Menu Navigasi</span>
                             </a>
                         </li>
+                        <li>
+                            <a href="{{ route('admin.ppdb.index') }}"
+                                class="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-[#2a4a7a] transition {{ request()->routeIs('admin.ppdb.*') ? 'bg-[#2a4a7a]' : '' }}">
+                                <i class="fas fa-user-plus w-5"></i>
+                                <span>Manajemen PPDB</span>
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>

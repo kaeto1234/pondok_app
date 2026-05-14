@@ -19,8 +19,15 @@
                 <p class="text-white/80 text-sm">Isi data dengan lengkap dan benar</p>
             </div>
 
-            <form class="p-6 space-y-6">
+            <form method="POST" action="{{ route('ppdb.store') }}" enctype="multipart/form-data" class="p-6 space-y-6">
                 @csrf
+                <input type="hidden" name="periode_pendaftaran_id" value="{{ $periodeAktif->id ?? '' }}">
+
+                @if(session('error'))
+                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+                        {{ session('error') }}
+                    </div>
+                @endif
 
                 <!-- Data Pribadi -->
                 <div>
@@ -28,30 +35,31 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-gray-700 dark:text-gray-300 mb-1">Nama Lengkap <span class="text-red-500">*</span></label>
-                            <input type="text" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-primary">
+                            <input type="text" name="nama_lengkap" required class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-primary">
                         </div>
                         <div>
                             <label class="block text-gray-700 dark:text-gray-300 mb-1">Tempat Lahir</label>
-                            <input type="text" class="w-full border border-gray-300 rounded-lg px-4 py-2">
+                            <input type="text" name="tempat_lahir" class="w-full border border-gray-300 rounded-lg px-4 py-2">
                         </div>
                         <div>
                             <label class="block text-gray-700 dark:text-gray-300 mb-1">Tanggal Lahir</label>
-                            <input type="date" class="w-full border border-gray-300 rounded-lg px-4 py-2">
+                            <input type="date" name="tanggal_lahir" class="w-full border border-gray-300 rounded-lg px-4 py-2">
                         </div>
                         <div>
                             <label class="block text-gray-700 dark:text-gray-300 mb-1">Jenis Kelamin</label>
-                            <select class="w-full border border-gray-300 rounded-lg px-4 py-2">
-                                <option>Laki-laki</option>
-                                <option>Perempuan</option>
+                            <select name="jenis_kelamin" required class="w-full border border-gray-300 rounded-lg px-4 py-2">
+                                <option value="">Pilih</option>
+                                <option value="L">Laki-laki</option>
+                                <option value="P">Perempuan</option>
                             </select>
                         </div>
                         <div class="md:col-span-2">
                             <label class="block text-gray-700 dark:text-gray-300 mb-1">Alamat</label>
-                            <textarea rows="2" class="w-full border border-gray-300 rounded-lg px-4 py-2"></textarea>
+                            <textarea name="alamat" rows="2" class="w-full border border-gray-300 rounded-lg px-4 py-2"></textarea>
                         </div>
                         <div>
                             <label class="block text-gray-700 dark:text-gray-300 mb-1">Asal Sekolah</label>
-                            <input type="text" class="w-full border border-gray-300 rounded-lg px-4 py-2">
+                            <input type="text" name="asal_sekolah" class="w-full border border-gray-300 rounded-lg px-4 py-2">
                         </div>
                     </div>
                 </div>
@@ -62,48 +70,52 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-gray-700 dark:text-gray-300 mb-1">Nama Ayah</label>
-                            <input type="text" class="w-full border border-gray-300 rounded-lg px-4 py-2">
+                            <input type="text" name="nama_ayah" class="w-full border border-gray-300 rounded-lg px-4 py-2">
                         </div>
                         <div>
                             <label class="block text-gray-700 dark:text-gray-300 mb-1">Pekerjaan Ayah</label>
-                            <input type="text" class="w-full border border-gray-300 rounded-lg px-4 py-2">
+                            <input type="text" name="pekerjaan_ayah" class="w-full border border-gray-300 rounded-lg px-4 py-2">
                         </div>
                         <div>
                             <label class="block text-gray-700 dark:text-gray-300 mb-1">Nama Ibu</label>
-                            <input type="text" class="w-full border border-gray-300 rounded-lg px-4 py-2">
+                            <input type="text" name="nama_ibu" class="w-full border border-gray-300 rounded-lg px-4 py-2">
                         </div>
                         <div>
                             <label class="block text-gray-700 dark:text-gray-300 mb-1">Pekerjaan Ibu</label>
-                            <input type="text" class="w-full border border-gray-300 rounded-lg px-4 py-2">
+                            <input type="text" name="pekerjaan_ibu" class="w-full border border-gray-300 rounded-lg px-4 py-2">
                         </div>
                         <div>
                             <label class="block text-gray-700 dark:text-gray-300 mb-1">No. Telepon Orang Tua</label>
-                            <input type="tel" class="w-full border border-gray-300 rounded-lg px-4 py-2">
+                            <input type="tel" name="telepon_orang_tua" class="w-full border border-gray-300 rounded-lg px-4 py-2">
                         </div>
                     </div>
                 </div>
 
-                <!-- Upload Berkas -->
+                <!-- Upload Berkas (dinamis dari database) -->
                 <div>
                     <h2 class="text-lg font-semibold text-gray-800 dark:text-white mb-4 border-b pb-2">C. Upload Berkas</h2>
                     <div class="space-y-3">
-                        <div>
-                            <label class="block text-gray-700 dark:text-gray-300 mb-1">Ijazah Terakhir</label>
-                            <input type="file" class="w-full border border-gray-300 rounded-lg px-4 py-2">
-                            <p class="text-xs text-gray-400 mt-1">Format PDF/JPG, maks 2MB</p>
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 dark:text-gray-300 mb-1">Akta Kelahiran</label>
-                            <input type="file" class="w-full border border-gray-300 rounded-lg px-4 py-2">
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 dark:text-gray-300 mb-1">Kartu Keluarga</label>
-                            <input type="file" class="w-full border border-gray-300 rounded-lg px-4 py-2">
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 dark:text-gray-300 mb-1">Pas Foto</label>
-                            <input type="file" class="w-full border border-gray-300 rounded-lg px-4 py-2">
-                        </div>
+                        @if(isset($berkasWajib) && $berkasWajib->count())
+                            @foreach($berkasWajib as $berkas)
+                            <div>
+                                <label class="block text-gray-700 dark:text-gray-300 mb-1">
+                                    {{ $berkas->jenisBerkas->nama }}
+                                    @if($berkas->is_required)
+                                        <span class="text-red-500">*</span>
+                                    @endif
+                                </label>
+                                <input type="file" name="berkas_{{ $berkas->id }}" 
+                                       class="w-full border border-gray-300 rounded-lg px-4 py-2"
+                                       {{ $berkas->is_required ? 'required' : '' }}>
+                                <p class="text-xs text-gray-400 mt-1">
+                                    Format: {{ $berkas->jenisBerkas->tipe_file }} | 
+                                    Maks: {{ $berkas->jenisBerkas->ukuran_maksimal / 1024 }}MB
+                                </p>
+                            </div>
+                            @endforeach
+                        @else
+                            <p class="text-gray-500">Belum ada konfigurasi berkas untuk periode ini.</p>
+                        @endif
                     </div>
                 </div>
 

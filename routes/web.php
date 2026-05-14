@@ -5,6 +5,10 @@ use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\PostCategoryController;
 use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PpdbController;
+use App\Http\Controllers\Admin\PpdbController as AdminPpdbController;
+
+
 
 use App\Models\PostCategory;
 use App\Models\Post;
@@ -28,7 +32,20 @@ Route::prefix('admin')->name('admin.')->group(function () {
     // Menus (Menu Navigasi)
     Route::resource('menus', MenuController::class);
 
+    // PPDB Admin
+    Route::get('/ppdb', [AdminPpdbController::class, 'index'])->name('ppdb.index');
+    Route::get('/ppdb/{id}', [AdminPpdbController::class, 'show'])->name('ppdb.show');
+    Route::post('/ppdb/{id}/verify', [AdminPpdbController::class, 'verify'])->name('ppdb.verify');
+    Route::post('/ppdb/{id}/reject', [AdminPpdbController::class, 'reject'])->name('ppdb.reject');
+
+
 });
+
+// PPDB
+Route::get('/ppdb', [PpdbController::class, 'index'])->name('ppdb.index');
+Route::get('/ppdb/daftar', [PpdbController::class, 'daftar'])->name('ppdb.daftar');
+Route::post('/ppdb/store', [PpdbController::class, 'store'])->name('ppdb.store');
+Route::get('/ppdb/selesai/{id}', [PpdbController::class, 'selesai'])->name('ppdb.selesai');
 
 // Halaman daftar berdasarkan kategori (berita, fasilitas, dll)
 Route::get('/kategori/{slug}', function ($slug) {
@@ -60,14 +77,7 @@ Route::get('/{slug}', function ($slug) {
 })->name('page.show');
 
 
-// PPDB
-Route::get('/ppdb', function () {
-    return view('ppdb.index');
-})->name('ppdb.index');
 
-Route::get('/ppdb/daftar', function () {
-    return view('ppdb.daftar');
-})->name('ppdb.daftar');
 
 Route::prefix('guru')->group(function () {
     
