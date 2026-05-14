@@ -17,7 +17,7 @@ return new class extends Migration
             $table->boolean('is_active')->default(true);
             $table->timestamps();
             
-            $table->unique(['tahun_ajaran_id', 'tingkat_id', 'mapel_id'], 'unique_kurikulum');
+            $table->unique(['tahun_ajaran_id', 'tingkat_diniyah_id', 'mata_pelajaran_id'], 'unique_kurikulum');
         });
     }
 

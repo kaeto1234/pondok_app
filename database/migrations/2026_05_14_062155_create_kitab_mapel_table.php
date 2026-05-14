@@ -14,7 +14,7 @@ return new class extends Migration
             $table->integer('urutan')->default(0);
             $table->timestamps();
             
-            $table->unique(['kitab_id', 'mapel_id']);
+            $table->unique(['kitab_id', 'mata_pelajaran_id']);
         });
     }
 
