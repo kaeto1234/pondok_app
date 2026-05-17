@@ -6,7 +6,9 @@ use App\Http\Controllers\Admin\PostCategoryController;
 use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PpdbController;
+use App\Http\Controllers\Guru\AbsensiGuruController;
 use App\Http\Controllers\Admin\PpdbController as AdminPpdbController;
+
 
 
 
@@ -38,6 +40,14 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('/ppdb/{id}/verify', [AdminPpdbController::class, 'verify'])->name('ppdb.verify');
     Route::post('/ppdb/{id}/reject', [AdminPpdbController::class, 'reject'])->name('ppdb.reject');
 
+    //Absensi
+    Route::prefix('guru')->name('guru.')->group(function () {
+    Route::get('/absensi', [AbsensiGuruController::class, 'index'])->name('absensi.index');
+    Route::get('/absensi/create/{jadwalId}', [AbsensiGuruController::class, 'create'])->name('absensi.create');
+    Route::post('/absensi/store/{jadwalId}', [AbsensiGuruController::class, 'store'])->name('absensi.store');
+    Route::get('/absensi/rekap', [AbsensiGuruController::class, 'rekap'])->name('absensi.rekap');
+});
+
 
 });
 
@@ -59,7 +69,7 @@ Route::get('/kategori/{slug}', function ($slug) {
 })->name('category.list');
 
 // Halaman detail post (SEMUA konten, baik page maupun post)
-Route::get('/{slug}', function ($slug) {
+Route::get('/page/{slug}', function ($slug) { 
     $post = Post::where('slug', $slug)->firstOrFail();
     
     // Jika ini adalah halaman kategori (post_type = page dan ada kategori terkait)
@@ -79,13 +89,13 @@ Route::get('/{slug}', function ($slug) {
 
 
 
-Route::prefix('guru')->group(function () {
+// Route::prefix('guru')->group(function () {
     
-    Route::get('/absensi', function () {
-        return view('guru.absensi');
-    })->name('guru.absensi');
+//     Route::get('/absensi', function () {
+//         return view('guru.absensi');
+//     })->name('guru.absensi');
     
-    Route::get('/nilai', function () {
-        return view('guru.nilai');
-    })->name('guru.nilai');
-});
+//     Route::get('/nilai', function () {
+//         return view('guru.nilai');
+//     })->name('guru.nilai');
+// });

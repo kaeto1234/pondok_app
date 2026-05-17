@@ -12,7 +12,8 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class, 
             UserSeeder::class,
             ContentSeeder::class,
-            MenuSeeder::class,        
+            MenuSeeder::class,
+            DataMasterAbsensiSeeder::class,     
         ]);
     }
 }
