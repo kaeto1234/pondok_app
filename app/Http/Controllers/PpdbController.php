@@ -2,48 +2,40 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\PeriodePendaftaran;
-use App\Models\Pendaftaran;
-use App\Models\BerkasPeriodePendaftaran;
+use App\Models\BerkasTahunAjaran;
 use App\Models\FileBerkasPendaftaran;
+use App\Models\Pendaftaran;
+use App\Models\TahunAjaran;
+use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-
 
 class PpdbController extends Controller
 {
-    // Halaman info PPDB
     public function index()
     {
-        $periodeAktif = PeriodePendaftaran::where('is_active', true)
-            ->where('tanggal_mulai', '<=', now())
-            ->where('tanggal_selesai', '>=', now())
-            ->first();
-        
-        return view('ppdb.index', compact('periodeAktif'));
+        $tahunAjaranAktif = TahunAjaran::where('is_active', true)->first();
+
+        return view('ppdb.index', compact('tahunAjaranAktif'));
     }
-    
-    // Halaman form pendaftaran
+
     public function daftar()
     {
-        $periodeAktif = PeriodePendaftaran::where('is_active', true)
-            ->where('tanggal_mulai', '<=', now())
-            ->where('tanggal_selesai', '>=', now())
-            ->first();
-        
-        if (!$periodeAktif) {
+        $tahunAjaranAktif = TahunAjaran::where('is_active', true)->first();
+
+        if (! $tahunAjaranAktif) {
             return redirect()->route('ppdb.index')->with('error', 'Maaf, pendaftaran sedang ditutup.');
         }
-        
-        $berkasWajib = $periodeAktif->berkasPeriode()->with('jenisBerkas')->orderBy('urutan')->get();
-        
-        return view('ppdb.daftar', compact('periodeAktif', 'berkasWajib'));
+
+        $berkasWajib = BerkasTahunAjaran::where('tahun_ajaran_id', $tahunAjaranAktif->id)
+            ->with('jenisBerkas')
+            ->orderBy('urutan')
+            ->get();
+
+        return view('ppdb.daftar', compact('tahunAjaranAktif', 'berkasWajib'));
     }
-    
-    // Proses simpan pendaftaran
+
     public function store(Request $request)
     {
-        // Validasi data
         $request->validate([
             'nama_lengkap' => 'required|string|max:100',
             'tempat_lahir' => 'nullable|string|max:50',
@@ -51,62 +43,87 @@ class PpdbController extends Controller
             'jenis_kelamin' => 'required|in:L,P',
             'alamat' => 'nullable|string',
             'asal_sekolah' => 'nullable|string|max:100',
+            'nama_ayah' => 'nullable|string|max:100',
+            'pekerjaan_ayah' => 'nullable|string|max:100',
+            'nama_ibu' => 'nullable|string|max:100',
+            'pekerjaan_ibu' => 'nullable|string|max:100',
             'nama_orang_tua' => 'nullable|string|max:100',
             'telepon_orang_tua' => 'nullable|string|max:20',
-            'periode_pendaftaran_id' => 'required|exists:periode_pendaftaran,id',
+            'email' => 'required|email|max:100|unique:pendaftaran,email',
         ]);
-        
-        // Cek periode aktif
-        $periode = PeriodePendaftaran::find($request->periode_pendaftaran_id);
-        if (!$periode->is_active) {
-            return back()->with('error', 'Periode pendaftaran tidak aktif.');
+
+        $tahunAjaran = TahunAjaran::where('is_active', true)->first();
+
+        if (! $tahunAjaran) {
+            return back()->with('error', 'Pendaftaran sedang ditutup.');
         }
-        
-        // Generate nomor pendaftaran
-        $noPendaftaran = 'REG-' . date('Ymd') . '-' . Str::upper(Str::random(6));
-        
-        // Simpan data pendaftaran
+
+        $noPendaftaran = 'REG-'.date('Ymd').'-'.Str::upper(Str::random(6));
+
         $pendaftaran = Pendaftaran::create([
             'no_pendaftaran' => $noPendaftaran,
-            'periode_pendaftaran_id' => $request->periode_pendaftaran_id,
+            'tahun_ajaran_id' => $tahunAjaran->id,
             'nama_lengkap' => $request->nama_lengkap,
             'tempat_lahir' => $request->tempat_lahir,
             'tanggal_lahir' => $request->tanggal_lahir,
             'jenis_kelamin' => $request->jenis_kelamin,
             'asal_sekolah' => $request->asal_sekolah,
             'alamat' => $request->alamat,
-            'nama_orang_tua' => $request->nama_orang_tua,
+            'nama_orang_tua' => $request->nama_ayah ?? $request->nama_orang_tua, // fallback
+            'nama_ayah' => $request->nama_ayah,
+            'pekerjaan_ayah' => $request->pekerjaan_ayah,
+            'nama_ibu' => $request->nama_ibu,
+            'pekerjaan_ibu' => $request->pekerjaan_ibu,
             'telepon_orang_tua' => $request->telepon_orang_tua,
+            'email' => $request->email,
             'tanggal_daftar' => now(),
             'status' => 'pending',
         ]);
-        
+
         // Upload berkas
-        $berkasList = BerkasPeriodePendaftaran::where('periode_pendaftaran_id', $request->periode_pendaftaran_id)->get();
-        
+        $berkasList = BerkasTahunAjaran::where('tahun_ajaran_id', $tahunAjaran->id)->get();
+
         foreach ($berkasList as $berkas) {
-            $fieldName = 'berkas_' . $berkas->id;
+            $fieldName = 'berkas_'.$berkas->id;
             if ($request->hasFile($fieldName)) {
                 $file = $request->file($fieldName);
-                $fileName = time() . '_' . $berkas->id . '_' . $file->getClientOriginalName();
-                $path = $file->storeAs('ppdb/' . $pendaftaran->id, $fileName, 'public');
-                
+                $fileName = time().'_'.$berkas->id.'_'.$file->getClientOriginalName();
+                $path = $file->storeAs('ppdb/'.$pendaftaran->id, $fileName, 'public');
+
                 FileBerkasPendaftaran::create([
                     'pendaftaran_id' => $pendaftaran->id,
-                    'berkas_periode_pendaftaran_id' => $berkas->id,
+                    'berkas_tahun_ajaran_id' => $berkas->id,
                     'path_file' => $path,
                 ]);
             }
         }
-        
+
         return redirect()->route('ppdb.selesai', $pendaftaran->id)
-            ->with('success', 'Pendaftaran berhasil! Nomor pendaftaran Anda: ' . $noPendaftaran);
+            ->with('success', 'Pendaftaran berhasil! Nomor pendaftaran Anda: '.$noPendaftaran);
     }
-    
-    // Halaman selesai / konfirmasi
+
     public function selesai($id)
     {
-        $pendaftaran = Pendaftaran::with('periodePendaftaran')->findOrFail($id);
+        $pendaftaran = Pendaftaran::with('tahunAjaran')->findOrFail($id);
+
         return view('ppdb.selesai', compact('pendaftaran'));
+    }
+
+    public function cekStatus()
+    {
+        return view('ppdb.cek-status');
+    }
+
+    public function hasilCekStatus(Request $request)
+    {
+        $request->validate([
+            'no_pendaftaran' => 'required|string',
+        ]);
+
+        $pendaftaran = Pendaftaran::where('no_pendaftaran', $request->no_pendaftaran)
+            ->with('tahunAjaran')
+            ->first();
+
+        return view('ppdb.cek-status', compact('pendaftaran'));
     }
 }

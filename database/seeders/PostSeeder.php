@@ -17,7 +17,6 @@ class PostSeeder extends Seeder
         $programCategory = PostCategory::where('slug', 'program-unggulan')->first();
         $fasilitasCategory = PostCategory::where('slug', 'fasilitas-preview')->first();
         $beritaCategory = PostCategory::where('slug', 'berita')->first();
-        $testimoniCategory = PostCategory::where('slug', 'testimoni')->first();
 
         $posts = [
             // ========== PROFIL ==========
@@ -216,37 +215,6 @@ class PostSeeder extends Seeder
                 'featured_image' => null,
             ],
             
-            // ========== TESTIMONI ==========
-            [
-                'title' => 'Bapak Santoso',
-                'content' => 'Pondok yang sangat baik dalam mendidik santri. Anak saya menjadi lebih disiplin dan rajin beribadah.',
-                'post_type' => 'post',
-                'post_category_id' => $testimoniCategory->id,
-                'author_id' => 1,
-                'published_at' => now(),
-                'slug' => 'testimoni-bapak-santoso',
-                'featured_image' => null,
-            ],
-            [
-                'title' => 'Ibu Fatimah',
-                'content' => 'Fasilitas lengkap, asatidz profesional, dan lingkungan yang nyaman untuk belajar.',
-                'post_type' => 'post',
-                'post_category_id' => $testimoniCategory->id,
-                'author_id' => 1,
-                'published_at' => now(),
-                'slug' => 'testimoni-ibu-fatimah',
-                'featured_image' => null,
-            ],
-            [
-                'title' => 'Alumni',
-                'content' => 'Terima kasih Ponpes Roudlotut Tullab, saya berhasil melanjutkan studi ke Timur Tengah berbekal ilmu yang saya dapatkan di sini.',
-                'post_type' => 'post',
-                'post_category_id' => $testimoniCategory->id,
-                'author_id' => 1,
-                'published_at' => now(),
-                'slug' => 'testimoni-alumni',
-                'featured_image' => null,
-            ],
         ];
 
         foreach ($posts as $post) {

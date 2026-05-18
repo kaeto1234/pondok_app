@@ -21,8 +21,8 @@
 
             <form method="POST" action="{{ route('ppdb.store') }}" enctype="multipart/form-data" class="p-6 space-y-6">
                 @csrf
-                <input type="hidden" name="periode_pendaftaran_id" value="{{ $periodeAktif->id ?? '' }}">
-
+                <input type="hidden" name="tahun_ajaran_id" value="{{ $tahunAjaranAktif->id ?? '' }}">
+                
                 @if(session('error'))
                     <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
                         {{ session('error') }}
@@ -88,10 +88,15 @@
                             <label class="block text-gray-700 dark:text-gray-300 mb-1">No. Telepon Orang Tua</label>
                             <input type="tel" name="telepon_orang_tua" class="w-full border border-gray-300 rounded-lg px-4 py-2">
                         </div>
+                        <div>
+                            <label class="block text-gray-700 dark:text-gray-300 mb-1">Email (untuk login wali) <span class="text-red-500">*</span></label>
+                            <input type="email" name="email" required class="w-full border border-gray-300 rounded-lg px-4 py-2">
+                            <p class="text-xs text-gray-400 mt-1">Email ini akan digunakan oleh wali santri untuk login</p>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Upload Berkas (dinamis dari database) -->
+                <!-- Upload Berkas -->
                 <div>
                     <h2 class="text-lg font-semibold text-gray-800 dark:text-white mb-4 border-b pb-2">C. Upload Berkas</h2>
                     <div class="space-y-3">
@@ -100,16 +105,16 @@
                             <div>
                                 <label class="block text-gray-700 dark:text-gray-300 mb-1">
                                     {{ $berkas->jenisBerkas->nama }}
-                                    @if($berkas->is_required)
+                                    @if($berkas->is_wajib)
                                         <span class="text-red-500">*</span>
                                     @endif
                                 </label>
                                 <input type="file" name="berkas_{{ $berkas->id }}" 
                                        class="w-full border border-gray-300 rounded-lg px-4 py-2"
-                                       {{ $berkas->is_required ? 'required' : '' }}>
+                                       {{ $berkas->is_wajib ? 'required' : '' }}>
                                 <p class="text-xs text-gray-400 mt-1">
                                     Format: {{ $berkas->jenisBerkas->tipe_file }} | 
-                                    Maks: {{ $berkas->jenisBerkas->ukuran_maksimal / 1024 }}MB
+                                    Maks: {{ number_format($berkas->jenisBerkas->ukuran_maksimal / 1024, 2) }} MB
                                 </p>
                             </div>
                             @endforeach

@@ -20,6 +20,11 @@ return new class extends Migration
             $table->text('alamat')->nullable();
             $table->string('nama_orang_tua', 100)->nullable();
             $table->string('telepon_orang_tua', 20)->nullable();
+            $table->string('nama_ayah', 100)->nullable();
+            $table->string('pekerjaan_ayah', 100)->nullable();
+            $table->string('nama_ibu', 100)->nullable();
+            $table->string('pekerjaan_ibu', 100)->nullable();
+            $table->string('email', 100)->nullable();
             $table->datetime('tanggal_daftar')->useCurrent();
             $table->enum('status', ['pending', 'diverifikasi', 'ditolak'])->default('pending');
             $table->text('catatan')->nullable();

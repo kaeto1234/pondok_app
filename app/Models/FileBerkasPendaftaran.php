@@ -7,15 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 class FileBerkasPendaftaran extends Model
 {
     protected $table = 'file_berkas_pendaftaran';
-    protected $fillable = ['pendaftaran_id', 'berkas_periode_pendaftaran_id', 'path_file'];
-    
+
+    protected $fillable = ['pendaftaran_id', 'berkas_tahun_ajaran_id', 'path_file'];
+
     public function pendaftaran()
     {
-        return $this->belongsTo(Pendaftaran::class, 'pendaftaran_id');
+        return $this->belongsTo(Pendaftaran::class);
     }
-    
-    public function berkasPeriode()
+
+    public function berkasTahunAjaran()
     {
-        return $this->belongsTo(BerkasPeriodePendaftaran::class, 'berkas_periode_pendaftaran_id');
+        return $this->belongsTo(BerkasTahunAjaran::class);
     }
 }

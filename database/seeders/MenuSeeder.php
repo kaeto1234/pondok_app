@@ -68,7 +68,6 @@ class MenuSeeder extends Seeder
         $mainMenus = [
             ['label' => 'Fasilitas', 'url' => '/kategori/fasilitas', 'order' => 3],
             ['label' => 'Berita', 'url' => '/kategori/berita', 'order' => 4],
-            ['label' => 'Kontak', 'url' => '/kontak', 'order' => 5],
         ];
         
         foreach ($mainMenus as $item) {

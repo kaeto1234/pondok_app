@@ -12,6 +12,7 @@ return new class extends Migration
         Schema::create('orang_tua', function (Blueprint $table) {
             $table->id();
             $table->foreignId('santri_id')->constrained('santri')->onDelete('cascade');
+            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('set null');
             $table->string('nama_ayah', 100)->nullable();
             $table->string('pendidikan_ayah', 50)->nullable();
             $table->string('pekerjaan_ayah', 100)->nullable();

@@ -56,11 +56,6 @@ class ContentSeeder extends Seeder
 
         ];
 
-        $footer = PostCategory::firstOrCreate(
-            ['slug' => 'footer'],
-            ['name' => 'Footer', 'description' => 'Komponen footer website', 'icon' => 'footer']
-        );
-
         // ========== HERO SECTION ==========
 
         // Hero Title
@@ -414,50 +409,5 @@ class ContentSeeder extends Seeder
                 ]
             );
         }
-
-        // ========== 7. KONTAK (PAGE) ==========
-
-        Post::updateOrCreate(
-            ['slug' => 'kontak'],
-            [
-                'title' => 'Kontak Kami',
-                'content' => "Alamat: Jl. Pesantren No. 1, Bogor\n\nTelepon: (021) 1234567\n\nWhatsApp: 0812-3456-7890\n\nEmail: info@ponpes.sch.id",
-                'post_type' => 'page',
-                'post_category_id' => null,
-                'author_id' => 1,
-                'published_at' => now(),
-                'featured_image' => null,
-            ]
-        );
-
-        // ========== DATA FOOTER ==========
-        $footerData = [
-            ['slug' => 'footer-logo-text', 'title' => 'Logo Text', 'content' => 'Ponpes Roudlotut Tullab'],
-            ['slug' => 'footer-description', 'title' => 'Deskripsi', 'content' => 'Mencetak generasi yang beriman, berilmu, dan berakhlak mulia.'],
-            ['slug' => 'footer-alamat', 'title' => 'Alamat', 'content' => 'Jl. Pesantren No. 1, Bogor'],
-            ['slug' => 'footer-telepon', 'title' => 'Telepon', 'content' => '(021) 1234567'],
-            ['slug' => 'footer-email', 'title' => 'Email', 'content' => 'info@ponpes.sch.id'],
-            ['slug' => 'footer-whatsapp', 'title' => 'WhatsApp', 'content' => '0812-3456-7890'],
-            ['slug' => 'footer-facebook', 'title' => 'Facebook', 'content' => 'https://facebook.com'],
-            ['slug' => 'footer-instagram', 'title' => 'Instagram', 'content' => 'https://www.instagram.com/andkptr.s?igsh=MW05cms5YWw2MzBldQ=='],
-            ['slug' => 'footer-youtube', 'title' => 'YouTube', 'content' => 'https://youtube.com'],
-            ['slug' => 'footer-twitter', 'title' => 'Twitter', 'content' => 'https://twitter.com'],
-        ];
-
-        foreach ($footerData as $item) {
-            Post::updateOrCreate(
-                ['slug' => $item['slug']],
-                [
-                    'title' => $item['title'],
-                    'content' => $item['content'],
-                    'post_type' => 'post',
-                    'post_category_id' => $footer->id,
-                    'author_id' => 1,
-                    'published_at' => now(),
-                    'featured_image' => null,
-                ]
-            );
-        }
-
     }
 }

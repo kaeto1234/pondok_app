@@ -185,26 +185,30 @@
     <footer class="bg-gray-900 text-white mt-20">
         <div class="container mx-auto px-4 py-12">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                <!-- Kolom 1: Logo & Deskripsi -->
+
+                <!-- Kolom 1: Logo & Nama Yayasan -->
                 <div>
                     <div class="flex items-center space-x-2 mb-4">
                         <i class="fas fa-mosque text-2xl text-primaryLight"></i>
-                        @if ($footerLogo)
-                            <span class="font-bold text-xl">{{ $footerLogo->content }}</span>
+                        @if ($yayasan && $yayasan->nama_yayasan)
+                            <span class="font-bold text-xl">{{ $yayasan->nama_yayasan }}</span>
                         @else
                             <span class="font-bold text-xl">Ponpes Roudlotut Tullab</span>
                         @endif
                     </div>
-                    @if ($footerDesc)
-                        <p class="text-gray-400 text-sm">{{ $footerDesc->content }}</p>
-                    @endif
+                    <p class="text-gray-400 text-sm mt-3 leading-relaxed">
+                        Pondok Pesantren berbasis akhlak dan ilmu pengetahuan.
+                    </p>
                 </div>
 
-                <!-- Kolom 2: Tautan Cepat (dari menu) -->
+                <!-- Kolom 2: Tautan Cepat -->
                 <div>
-                    <h4 class="font-semibold text-lg mb-4">Tautan Cepat</h4>
+                    <h4 class="font-semibold text-lg mb-4 relative">
+                        Tautan Cepat
+                        <span class="absolute bottom-0 left-0 w-10 h-0.5 bg-primaryLight mt-2"></span>
+                    </h4>
                     <ul class="space-y-2 text-gray-400 text-sm">
-                        @foreach ($quickLinks as $link)
+                        @forelse ($quickLinks as $link)
                             @php
                                 $url = $link->link
                                     ? $link->link->url
@@ -214,70 +218,105 @@
                             @endphp
                             <li>
                                 <a href="{{ $url }}"
-                                    class="hover:text-primaryLight transition">{{ $link->label }}</a>
+                                    class="hover:text-primaryLight transition flex items-center gap-2">
+                                    <i class="fas fa-chevron-right text-xs text-primaryLight"></i>
+                                    {{ $link->label }}
+                                </a>
                             </li>
-                        @endforeach
+                        @empty
+                            <li class="text-gray-500">Belum ada data</li>
+                        @endforelse
                     </ul>
                 </div>
 
                 <!-- Kolom 3: Kontak -->
                 <div>
-                    <h4 class="font-semibold text-lg mb-4">Kontak</h4>
-                    <ul class="space-y-2 text-gray-400 text-sm">
-                        @if ($footerAlamat)
-                            <li><i class="fas fa-map-marker-alt w-5 text-primaryLight"></i>
-                                {{ $footerAlamat->content }}</li>
-                        @endif
-                        @if ($footerTelepon)
-                            <li><i class="fas fa-phone w-5 text-primaryLight"></i> {{ $footerTelepon->content }}</li>
-                        @endif
-                        @if ($footerWhatsapp)
-                            <li><i class="fab fa-whatsapp w-5 text-primaryLight"></i> {{ $footerWhatsapp->content }}
+                    <h4 class="font-semibold text-lg mb-4 relative">
+                        Kontak
+                        <span class="absolute bottom-0 left-0 w-10 h-0.5 bg-primaryLight mt-2"></span>
+                    </h4>
+                    <ul class="space-y-3 text-gray-400 text-sm">
+                        @if ($yayasan && $yayasan->alamat)
+                            <li class="flex items-start gap-3">
+                                <i class="fas fa-map-marker-alt text-primaryLight mt-1"></i>
+                                <span>{{ $yayasan->alamat }}</span>
                             </li>
                         @endif
-                        @if ($footerEmail)
-                            <li><i class="fas fa-envelope w-5 text-primaryLight"></i> {{ $footerEmail->content }}</li>
+                        @if ($yayasan && $yayasan->telepon)
+                            <li class="flex items-center gap-3">
+                                <i class="fas fa-phone text-primaryLight"></i>
+                                <span>{{ $yayasan->telepon }}</span>
+                            </li>
+                        @endif
+                        @if ($yayasan && $yayasan->whatsapp)
+                            <li class="flex items-center gap-3">
+                                <i class="fab fa-whatsapp text-primaryLight"></i>
+                                <span>{{ $yayasan->whatsapp }}</span>
+                            </li>
+                        @endif
+                        @if ($yayasan && $yayasan->email)
+                            <li class="flex items-center gap-3">
+                                <i class="fas fa-envelope text-primaryLight"></i>
+                                <a href="mailto:{{ $yayasan->email }}" class="hover:text-primaryLight transition">
+                                    {{ $yayasan->email }}
+                                </a>
+                            </li>
                         @endif
                     </ul>
                 </div>
 
-                <!-- Kolom 4: Media Sosial -->
+                <!-- Kolom 4: Media Sosial & Google Maps -->
                 <div>
-                    <h4 class="font-semibold text-lg mb-4">Media Sosial</h4>
-                    <div class="flex space-x-4">
-                        @if ($footerFacebook)
-                            <a href="{{ $footerFacebook->content }}" target="_blank"
-                                class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center text-gray-400 hover:bg-primaryLight hover:text-white transition">
+                    <h4 class="font-semibold text-lg mb-4 relative">
+                        Media Sosial
+                        <span class="absolute bottom-0 left-0 w-10 h-0.5 bg-primaryLight mt-2"></span>
+                    </h4>
+                    <div class="flex space-x-3 mb-4">
+                        @if ($yayasan && $yayasan->facebook)
+                            <a href="{{ $yayasan->facebook }}" target="_blank"
+                                class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center text-gray-400 hover:bg-primaryLight hover:text-white transition group">
                                 <i class="fab fa-facebook-f"></i>
                             </a>
                         @endif
-                        @if ($footerInstagram)
-                            <a href="{{ $footerInstagram->content }}" target="_blank"
+                        @if ($yayasan && $yayasan->instagram)
+                            <a href="{{ $yayasan->instagram }}" target="_blank"
                                 class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center text-gray-400 hover:bg-primaryLight hover:text-white transition">
                                 <i class="fab fa-instagram"></i>
                             </a>
                         @endif
-                        @if ($footerYoutube)
-                            <a href="{{ $footerYoutube->content }}" target="_blank"
+                        @if ($yayasan && $yayasan->youtube)
+                            <a href="{{ $yayasan->youtube }}" target="_blank"
                                 class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center text-gray-400 hover:bg-primaryLight hover:text-white transition">
                                 <i class="fab fa-youtube"></i>
                             </a>
                         @endif
-                        @if ($footerTwitter)
-                            <a href="{{ $footerTwitter->content }}" target="_blank"
+                        @if ($yayasan && $yayasan->twitter)
+                            <a href="{{ $yayasan->twitter }}" target="_blank"
                                 class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center text-gray-400 hover:bg-primaryLight hover:text-white transition">
                                 <i class="fab fa-twitter"></i>
                             </a>
                         @endif
                     </div>
+
+                    <!-- Google Maps -->
+                    @if ($yayasan && $yayasan->google_maps)
+                        <div class="mt-4 overflow-hidden rounded-lg">
+                            {!! $yayasan->google_maps !!}
+                        </div>
+                    @else
+                        <div class="bg-gray-800 rounded-lg p-3 text-center text-gray-500 text-xs">
+                            <i class="fas fa-map-marked-alt"></i> Link Google Maps belum tersedia
+                        </div>
+                    @endif
                 </div>
             </div>
-            <div class="border-t border-gray-800 mt-8 pt-6 text-center text-gray-500 text-sm">
+
+            <!-- Copyright -->
+            <div class="border-t border-gray-800 mt-10 pt-6 text-center text-gray-500 text-sm">
                 &copy; {{ date('Y') }} Pondok Pesantren Roudlotut Tullab. All rights reserved.
             </div>
         </div>
     </footer>
-
     <script>
         const darkModeToggle = document.getElementById('darkModeToggle');
         const html = document.documentElement;

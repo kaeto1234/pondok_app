@@ -13,7 +13,8 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             ContentSeeder::class,
             MenuSeeder::class,
-            DataMasterAbsensiSeeder::class,     
-        ]);
+            DataMasterSeeder::class,     
+            YayasanInfoSeeder::class,     
+            ]);
     }
 }

@@ -7,26 +7,21 @@ use Illuminate\Database\Eloquent\Model;
 class AbsensiGuru extends Model
 {
     protected $table = 'absensi_guru';
-    
+
     protected $fillable = [
-        'jadwal_mengajar_id',
-        'tanggal',
-        'pertemuan_ke',
-        'status',
-        'keterangan',
+        'jadwal_mengajar_id', 'tanggal',
+        'pertemuan_ke', 'status', 'keterangan',
     ];
-    
-    protected $casts = [
-        'tanggal' => 'date',
-    ];
-    
+
+    protected $casts = ['tanggal' => 'date'];
+
     public function jadwalMengajar()
     {
-        return $this->belongsTo(JadwalMengajar::class, 'jadwal_mengajar_id');
+        return $this->belongsTo(JadwalMengajar::class);
     }
-    
+
     public function absensiSantri()
     {
-        return $this->hasMany(AbsensiSantri::class, 'absensi_guru_id');
+        return $this->hasMany(AbsensiSantri::class);
     }
 }

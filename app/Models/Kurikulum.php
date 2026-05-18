@@ -7,32 +7,31 @@ use Illuminate\Database\Eloquent\Model;
 class Kurikulum extends Model
 {
     protected $table = 'kurikulum';
-    
+
     protected $fillable = [
-        'tahun_ajaran_id',
-        'tingkat_diniyah_id',  // ← perhatikan ini
-        'mata_pelajaran_id',   // ← perhatikan ini
-        'urutan',
-        'is_active',
+        'tahun_ajaran_id', 'tingkat_diniyah_id',
+        'mata_pelajaran_id', 'urutan', 'is_active',
     ];
-    
+
+    protected $casts = ['is_active' => 'boolean'];
+
     public function tahunAjaran()
     {
-        return $this->belongsTo(TahunAjaran::class, 'tahun_ajaran_id');
+        return $this->belongsTo(TahunAjaran::class);
     }
-    
-    public function tingkat()
+
+    public function tingkatDiniyah()
     {
-        return $this->belongsTo(TingkatDiniyah::class, 'tingkat_diniyah_id');
+        return $this->belongsTo(TingkatDiniyah::class);
     }
-    
-    public function mapel()
+
+    public function mataPelajaran()
     {
-        return $this->belongsTo(MataPelajaran::class, 'mata_pelajaran_id');
+        return $this->belongsTo(MataPelajaran::class);
     }
-    
+
     public function jadwalMengajar()
     {
-        return $this->hasMany(JadwalMengajar::class, 'kurikulum_id');
+        return $this->hasMany(JadwalMengajar::class);
     }
 }
