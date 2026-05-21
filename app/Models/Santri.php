@@ -32,4 +32,9 @@ class Santri extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function santriTingkat()
+    {
+        return $this->hasMany(SantriTingkat::class, 'santri_id');
+    }
 }

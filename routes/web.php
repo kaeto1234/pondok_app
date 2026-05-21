@@ -12,16 +12,20 @@ use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\PostCategoryController;
 use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\PpdbController as AdminPpdbController;
+use App\Http\Controllers\Admin\SantriController as AdminSantriController;
 use App\Http\Controllers\Admin\TahunAjaranController;
 use App\Http\Controllers\Admin\TingkatDiniyahController;
 use App\Http\Controllers\Admin\YayasanController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Guru\AbsensiGuruController;
 use App\Http\Controllers\Guru\DashboardController as GuruDashboardController;
+use App\Http\Controllers\Guru\MateriController;
 use App\Http\Controllers\Guru\NilaiController;
+use App\Http\Controllers\Guru\SantriController as GuruSantriController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PpdbController;
 use App\Http\Controllers\Wali\DashboardController as WaliDashboardController;
+use App\Http\Controllers\Wali\SantriController as WaliSantriController;
 use App\Models\Post;
 use App\Models\PostCategory;
 use Illuminate\Support\Facades\Route;
@@ -127,6 +131,13 @@ Route::prefix('admin')->name('admin.')->middleware(['auth.custom', 'role:admin']
 
     // Kitab
     Route::resource('kitab', KitabController::class)->except(['show']);
+
+    // Santri
+    Route::get('/santri', [AdminSantriController::class, 'index'])->name('santri.index');
+    Route::get('/santri/{id}', [AdminSantriController::class, 'show'])->name('santri.show');
+    Route::get('/santri/{id}/edit', [AdminSantriController::class, 'edit'])->name('santri.edit');
+    Route::put('/santri/{id}', [AdminSantriController::class, 'update'])->name('santri.update');
+    Route::delete('/santri/{id}', [AdminSantriController::class, 'destroy'])->name('santri.destroy');
 });
 
 // Guru
@@ -150,13 +161,28 @@ Route::prefix('guru')->name('guru.')->middleware(['auth.custom', 'role:guru'])->
     Route::get('/nilai/input', [NilaiController::class, 'create'])->name('nilai.create');
     Route::post('/nilai/input', [NilaiController::class, 'store'])->name('nilai.store');
     Route::get('/nilai/rekap', [NilaiController::class, 'rekap'])->name('nilai.rekap');
+
+    // Daftar santri
+    Route::get('/santri', [GuruSantriController::class, 'index'])->name('santri.index');
+    Route::get('/santri/{id}', [GuruSantriController::class, 'show'])->name('santri.show');
+
+    // Materi
+    Route::get('/materi', [MateriController::class, 'index'])->name('materi.index');
+    Route::post('/materi', [MateriController::class, 'store'])->name('materi.store');
+    Route::delete('/materi/{id}', [MateriController::class, 'destroy'])->name('materi.destroy');
 });
 
 // Wali
 Route::prefix('wali')->name('wali.')->middleware(['auth.custom', 'role:wali'])->group(function () {
 
-    //Dashboard Wali
+    // Dashboard Wali
     Route::get('/dashboard', [WaliDashboardController::class, 'index'])->name('dashboard');
     Route::put('/profile', [WaliDashboardController::class, 'updateProfile'])->name('profile.update');
     Route::put('/password', [WaliDashboardController::class, 'updatePassword'])->name('password.update');
+
+    // penilian,absensi,download materi & nilai
+    Route::get('/nilai', [WaliSantriController::class, 'nilai'])->name('santri.nilai');
+    Route::get('/absensi', [WaliSantriController::class, 'absensi'])->name('santri.absensi');
+    Route::get('/materi', [WaliSantriController::class, 'materi'])->name('santri.materi');
+    Route::get('/materi/{id}/download', [WaliSantriController::class, 'download'])->name('santri.materi.download');
 });

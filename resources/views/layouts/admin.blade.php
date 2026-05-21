@@ -163,6 +163,13 @@
                                     <span>Kitab</span>
                                 </a>
                             </li>
+                            <li>
+                                <a href="{{ route('admin.santri.index') }}"
+                                    class="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-[#2a4a7a] transition {{ request()->routeIs('admin.santri.*') ? 'bg-[#2a4a7a]' : '' }}">
+                                    <i class="fas fa-user-graduate w-5"></i>
+                                    <span>Manajemen Santri</span>
+                                </a>
+                            </li>
                         </ul>
                     </div>
 
@@ -232,6 +239,20 @@
                                     <span>Nilai</span>
                                 </a>
                             </li>
+                            <li>
+                                <a href="{{ route('guru.santri.index') }}"
+                                    class="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-[#2a4a7a] transition {{ request()->routeIs('guru.santri.*') ? 'bg-[#2a4a7a]' : '' }}">
+                                    <i class="fas fa-users w-5"></i>
+                                    <span>Daftar Santri</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('guru.materi.index') }}"
+                                    class="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-[#2a4a7a] transition {{ request()->routeIs('guru.materi.*') ? 'bg-[#2a4a7a]' : '' }}">
+                                    <i class="fas fa-book-open w-5"></i>
+                                    <span>Materi</span>
+                                </a>
+                            </li>
                         </ul>
                     </div>
 
@@ -245,6 +266,27 @@
                                     class="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-[#2a4a7a] transition {{ request()->routeIs('wali.dashboard') ? 'bg-[#2a4a7a]' : '' }}">
                                     <i class="fas fa-tachometer-alt w-5"></i>
                                     <span>Dashboard</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('wali.santri.nilai') }}"
+                                    class="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-[#2a4a7a] transition {{ request()->routeIs('wali.santri.nilai') ? 'bg-[#2a4a7a]' : '' }}">
+                                    <i class="fas fa-star w-5"></i>
+                                    <span>Nilai</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('wali.santri.absensi') }}"
+                                    class="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-[#2a4a7a] transition {{ request()->routeIs('wali.santri.absensi') ? 'bg-[#2a4a7a]' : '' }}">
+                                    <i class="fas fa-clipboard-check w-5"></i>
+                                    <span>Absensi</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('wali.santri.materi') }}"
+                                    class="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-[#2a4a7a] transition {{ request()->routeIs('wali.santri.materi') ? 'bg-[#2a4a7a]' : '' }}">
+                                    <i class="fas fa-book w-5"></i>
+                                    <span>Materi</span>
                                 </a>
                             </li>
                         </ul>
