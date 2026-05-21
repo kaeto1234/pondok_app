@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Wali;
 
 use App\Http\Controllers\Controller;
-use App\Models\OrangTua;
-use App\Models\AbsensiGuru;
+use App\Models\JenisUjian;
+use App\Models\MataPelajaran;
 use App\Models\Materi;
 use App\Models\Nilai;
-use App\Models\JenisUjian;
+use App\Models\OrangTua;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -17,20 +17,33 @@ class SantriController extends Controller
     {
         $orangTua = OrangTua::where('user_id', session('user_id'))
             ->with(['santri.santriTingkat.tingkat', 'santri.santriTingkat.tahunAjaran'])
-            ->firstOrFail();
+            ->first();
+
+        if (! $orangTua || ! $orangTua->santri) {
+            return null;
+        }
 
         return $orangTua->santri;
     }
 
     public function nilai()
     {
-        $santri       = $this->getSantri();
+        $santri = $this->getSantri();
+        $jenisUjianList = JenisUjian::all();
+
+        if (! $santri) {
+            return view('wali.santri.nilai', [
+                'santri' => null,
+                'santriTingkat' => null,
+                'jenisUjianList' => $jenisUjianList,
+                'nilaiData' => [],
+            ]);
+        }
+
         $santriTingkat = $santri->santriTingkat()
             ->with(['tingkat', 'tahunAjaran'])
             ->where('status', 'aktif')
             ->first();
-
-        $jenisUjianList = JenisUjian::all();
 
         $nilaiData = [];
         if ($santriTingkat) {
@@ -45,13 +58,23 @@ class SantriController extends Controller
 
     public function absensi()
     {
-        $santri        = $this->getSantri();
+        $santri = $this->getSantri();
+        $statistik = ['hadir' => 0, 'sakit' => 0, 'izin' => 0, 'alpha' => 0];
+
+        if (! $santri) {
+            return view('wali.santri.absensi', [
+                'santri' => null,
+                'santriTingkat' => null,
+                'absensiList' => collect(),
+                'statistik' => $statistik,
+            ]);
+        }
+
         $santriTingkat = $santri->santriTingkat()
             ->where('status', 'aktif')
             ->first();
 
-        $absensiList = [];
-        $statistik   = ['hadir' => 0, 'sakit' => 0, 'izin' => 0, 'alpha' => 0];
+        $absensiList = collect();
 
         if ($santriTingkat) {
             $absensiList = $santriTingkat->absensiSantri()
@@ -70,18 +93,16 @@ class SantriController extends Controller
 
     public function materi(Request $request)
     {
-        $santri        = $this->getSantri();
-        $santriTingkat = $santri->santriTingkat()
-            ->where('status', 'aktif')
-            ->first();
+        $santri = $this->getSantri();
+        $santriTingkat = $santri?->santriTingkat()->where('status', 'aktif')->first();
 
         $materi = Materi::with(['mataPelajaran', 'tingkat'])
-            ->when($santriTingkat, fn($q) => $q->where('tingkat_id', $santriTingkat->tingkat_id))
-            ->when($request->mapel_id, fn($q) => $q->where('mapel_id', $request->mapel_id))
+            ->when($santriTingkat, fn ($q) => $q->where('tingkat_id', $santriTingkat->tingkat_id))
+            ->when($request->mapel_id, fn ($q) => $q->where('mapel_id', $request->mapel_id))
             ->latest()
             ->paginate(15);
 
-        $mapelList = \App\Models\MataPelajaran::where('is_active', true)
+        $mapelList = MataPelajaran::where('is_active', true)
             ->orderBy('nama_mapel')->get();
 
         return view('wali.santri.materi', compact('santri', 'materi', 'mapelList'));
@@ -90,13 +111,11 @@ class SantriController extends Controller
     public function download($id)
     {
         $materi = Materi::findOrFail($id);
-
-        // Increment counter
         $materi->increment('diunduh');
 
         return Storage::disk('public')->download(
             $materi->path_file,
-            $materi->judul . '.' . pathinfo($materi->path_file, PATHINFO_EXTENSION)
+            $materi->judul.'.'.pathinfo($materi->path_file, PATHINFO_EXTENSION)
         );
     }
 }
