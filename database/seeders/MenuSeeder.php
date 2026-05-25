@@ -4,8 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Menu;
-use App\Models\MenuPost;
-use App\Models\Post;
+
 
 class MenuSeeder extends Seeder
 {
@@ -18,25 +17,24 @@ class MenuSeeder extends Seeder
         );
         
         $subProfil = [
-            'Sejarah' => 'sejarah',
-            'Visi & Misi' => 'visi-misi',
-            'Struktur Organisasi' => 'struktur',
-            'Sambutan Pimpinan' => 'sambutan',
+            'Sejarah' => '/page/sejarah',
+            'Visi & Misi' => '/page/visi-misi',
+            'Struktur Organisasi' => '/page/struktur',
+            'Sambutan Pimpinan' => '/page/sambutan',
         ];
         
         $order = 1;
-        foreach ($subProfil as $label => $slug) {
-            $post = Post::where('slug', $slug)->first();
-            if ($post) {
+        foreach ($subProfil as $label => $url) {
+
                 $menu = Menu::updateOrCreate(
                     ['label' => $label],
                     ['parent_id' => $profilMenu->id, 'order' => $order++, 'is_active' => true]
                 );
-                MenuPost::updateOrCreate(
+                \App\Models\MenuLink::updateOrCreate(
                     ['menu_id' => $menu->id],
-                    ['post_id' => $post->id]
+                    ['url' => $url]
                 );
-            }
+
         }
         
         // ========== MENU AKADEMIK (PARENT) ==========
