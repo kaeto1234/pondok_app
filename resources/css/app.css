@@ -1,9 +1,48 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-@layer base {
-  body {
-    @apply bg-white dark:bg-gray-900 text-gray-800 dark:text-white;
-  }
+@variant dark (&:where(.dark, .dark *));
+
+@theme {
+    --color-primary: #166534;
+    --color-primary-light: #22c55e;
+    --color-primary-dark: #14532d;
+}
+
+@utility bg-primary {
+    background-color: #166534;
+}
+@utility text-primary {
+    color: #166534;
+}
+@utility border-primary {
+    border-color: #166534;
+}
+@utility ring-primary {
+    --tw-ring-color: #166534;
+}
+@utility bg-primaryLight {
+    background-color: #22c55e;
+}
+@utility text-primaryLight {
+    color: #22c55e;
+}
+@utility bg-primaryDark {
+    background-color: #14532d;
+}
+@utility text-primaryDark {
+    color: #14532d;
+}
+@utility from-primary {
+    --tw-gradient-from: #166534;
+    --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+@utility to-primary {
+    --tw-gradient-to: #166534;
+}
+@utility from-primaryDark {
+    --tw-gradient-from: #14532d;
+    --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+@utility to-primaryDark {
+    --tw-gradient-to: #14532d;
 }

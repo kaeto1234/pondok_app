@@ -190,7 +190,7 @@
                 </div>
                 <div class="text-center mt-8">
                     <a href="{{ url('/berita') }}"
-                        class="bg-primary text-white px-6 py-2 rounded-lg font-semibold hover:bg-primaryDark transition">Lihat
+                        class="bg-primary text-white px-6 py-2 rounded-lg font-semibold hover:bg-[#14532d] transition">Lihat
                         Semua Berita</a>
                 </div>
             </div>

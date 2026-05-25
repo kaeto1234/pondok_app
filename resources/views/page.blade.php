@@ -28,7 +28,7 @@
             @if ($post->featured_image)
                 <div class="rounded-2xl overflow-hidden shadow-xl mb-8">
                     <img src="{{ asset('storage/' . $post->featured_image) }}" alt="{{ $post->title }}"
-                        class="w-full h-80 object-cover">
+                        class="w-full {{ $post->post_type == 'page' ? 'h-auto' : 'h-80 object-cover' }}">
                 </div>
             @endif
 

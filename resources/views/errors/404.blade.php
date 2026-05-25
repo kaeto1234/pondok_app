@@ -5,7 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>404 - Halaman Tidak Ditemukan</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    @if (isset($yayasan) && $yayasan?->favicon)
+        <link rel="icon" type="image/x-icon" href="{{ asset('storage/' . $yayasan->favicon) }}">
+    @else
+        <link rel="icon" type="image/png" href="{{ asset('asset/logo_ponpes.png') }}">
+    @endif
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         @keyframes float {

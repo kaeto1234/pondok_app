@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Pondok Pesantren Roudlotut Tullab')</title>
-    {{-- Tambah setelah <title> --}}
     @if (isset($yayasan) && $yayasan?->favicon)
         <link rel="icon" type="image/x-icon" href="{{ asset('storage/' . $yayasan->favicon) }}">
     @else
@@ -13,22 +12,7 @@
     @endif
 
     <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#166534',
-                        primaryLight: '#22c55e',
-                        primaryDark: '#14532d',
-                    }
-                }
-            }
-        }
-    </script>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -345,22 +329,37 @@
         const html = document.documentElement;
         const icon = document.getElementById('darkModeIcon');
 
-        if (localStorage.getItem('theme') === 'dark') {
+        // Cek theme saat pertama load
+        const savedTheme = localStorage.getItem('theme');
+
+        if (savedTheme === 'dark') {
             html.classList.add('dark');
+            html.classList.remove('light');
             icon.classList.remove('fa-moon');
             icon.classList.add('fa-sun');
+        } else {
+            // Default: light mode
+            html.classList.remove('dark');
+            html.classList.add('light');
+            icon.classList.remove('fa-sun');
+            icon.classList.add('fa-moon');
         }
 
         darkModeToggle.addEventListener('click', () => {
-            html.classList.toggle('dark');
             if (html.classList.contains('dark')) {
-                localStorage.setItem('theme', 'dark');
-                icon.classList.remove('fa-moon');
-                icon.classList.add('fa-sun');
-            } else {
+                // Switch ke light
+                html.classList.remove('dark');
+                html.classList.add('light');
                 localStorage.setItem('theme', 'light');
                 icon.classList.remove('fa-sun');
                 icon.classList.add('fa-moon');
+            } else {
+                // Switch ke dark
+                html.classList.remove('light');
+                html.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
             }
         });
 
