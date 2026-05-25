@@ -1,12 +1,15 @@
 @extends('layouts.admin')
-@section('title', 'Artikel & Berita')
+@section('title', 'Halaman Statis')
 @section('content')
 
     <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-bold text-gray-800">Artikel & Berita</h1>
-        <a href="{{ route('admin.posts.create', ['type' => 'post']) }}"
+        <div>
+            <h1 class="text-2xl font-bold text-gray-800">Halaman Statis</h1>
+            <p class="text-sm text-gray-500 mt-1">Profil, fasilitas, kontak, dan halaman lainnya</p>
+        </div>
+        <a href="{{ route('admin.posts.create', ['type' => 'page']) }}"
             class="bg-[#1e3a5f] text-white px-4 py-2 rounded-lg hover:bg-[#2a4a7a] transition">
-            <i class="fas fa-plus mr-2"></i> Tambah Artikel
+            <i class="fas fa-plus mr-2"></i> Tambah Halaman
         </a>
     </div>
 
@@ -16,19 +19,10 @@
     @endif
 
     {{-- Search & Filter --}}
-    <div class="mb-6 flex gap-3 flex-wrap">
-        <div class="flex-1 min-w-48">
-            <x-search-bar placeholder="Cari judul artikel..." />
+    <div class="mb-6 flex gap-3">
+        <div class="flex-1">
+            <x-search-bar placeholder="Cari judul halaman..." />
         </div>
-        <select onchange="window.location.href=updateQueryParam('category_id', this.value)"
-            class="border rounded-lg px-3 py-2 text-sm">
-            <option value="">Semua Kategori</option>
-            @foreach ($categories as $cat)
-                <option value="{{ $cat->id }}" {{ request('category_id') == $cat->id ? 'selected' : '' }}>
-                    {{ $cat->name }}
-                </option>
-            @endforeach
-        </select>
         <select onchange="window.location.href=updateQueryParam('status', this.value)"
             class="border rounded-lg px-3 py-2 text-sm">
             <option value="">Semua Status</option>
@@ -42,9 +36,9 @@
             <thead class="bg-gray-50 border-b">
                 <tr>
                     <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600">Judul</th>
-                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600">Kategori</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600">Slug</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600">Urutan</th>
                     <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600">Status</th>
-                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600">Tanggal</th>
                     <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600">Aksi</th>
                 </tr>
             </thead>
@@ -52,7 +46,13 @@
                 @forelse($posts as $post)
                     <tr class="border-b hover:bg-gray-50">
                         <td class="px-6 py-3 font-medium text-sm">{{ $post->title }}</td>
-                        <td class="px-6 py-3 text-sm text-gray-500">{{ $post->category->name ?? '-' }}</td>
+                        <td class="px-6 py-3 text-sm text-gray-500">
+                            <a href="{{ url('/page/' . $post->slug) }}" target="_blank"
+                                class="text-blue-600 hover:underline">
+                                /page/{{ $post->slug }}
+                            </a>
+                        </td>
+                        <td class="px-6 py-3 text-sm text-gray-500">{{ $post->menu_order }}</td>
                         <td class="px-6 py-3">
                             @if ($post->published_at)
                                 <span
@@ -61,9 +61,6 @@
                                 <span
                                     class="text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full font-semibold">Draft</span>
                             @endif
-                        </td>
-                        <td class="px-6 py-3 text-sm text-gray-500">
-                            {{ $post->published_at ? $post->published_at->format('d M Y') : '-' }}
                         </td>
                         <td class="px-6 py-3">
                             <div class="flex gap-2">
@@ -74,7 +71,7 @@
                                 <form action="{{ route('admin.posts.destroy', $post->id) }}" method="POST" class="inline">
                                     @csrf @method('DELETE')
                                     <button type="submit" class="text-red-600 hover:text-red-800 text-sm"
-                                        onclick="return confirm('Yakin hapus artikel ini?')">
+                                        onclick="return confirm('Yakin hapus halaman ini?')">
                                         <i class="fas fa-trash mr-1"></i> Hapus
                                     </button>
                                 </form>
@@ -83,7 +80,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="5" class="px-6 py-8 text-center text-gray-500">Belum ada artikel.</td>
+                        <td colspan="5" class="px-6 py-8 text-center text-gray-500">Belum ada halaman statis.</td>
                     </tr>
                 @endforelse
             </tbody>

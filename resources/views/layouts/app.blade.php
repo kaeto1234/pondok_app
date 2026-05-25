@@ -5,6 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Pondok Pesantren Roudlotut Tullab')</title>
+    {{-- Tambah setelah <title> --}}
+    @if (isset($yayasan) && $yayasan?->favicon)
+        <link rel="icon" type="image/x-icon" href="{{ asset('storage/' . $yayasan->favicon) }}">
+    @else
+        <link rel="icon" type="image/png" href="{{ asset('asset/logo_ponpes.png') }}">
+    @endif
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -51,6 +57,12 @@
                 transform: translateY(0);
             }
         }
+
+        footer iframe {
+            width: 100% !important;
+            height: 180px !important;
+            display: block;
+        }
     </style>
 
     @stack('styles')
@@ -65,8 +77,13 @@
 
                 <!-- LOGO -->
                 <div class="flex items-center space-x-3 flex-shrink-0 mr-8">
-                    <img src="{{ asset('asset/logo_ponpes.png') }}" alt="Logo Ponpes Roudlotut Tullab"
-                        class="h-20 w-auto">
+                    @if ($yayasan && $yayasan->logo)
+                        <img src="{{ asset('storage/' . $yayasan->logo) }}"
+                            alt="{{ $yayasan->nama_yayasan ?? 'Logo Pesantren' }}" class="h-20 w-auto">
+                    @else
+                        <img src="{{ asset('asset/logo_ponpes.png') }}" alt="Logo Ponpes Roudlotut Tullab"
+                            class="h-20 w-auto">
+                    @endif
                     <span class="text-white font-bold text-xl whitespace-nowrap">Roudlotut Tullab</span>
                 </div>
 
@@ -189,7 +206,13 @@
                 <!-- Kolom 1: Logo & Nama Yayasan -->
                 <div>
                     <div class="flex items-center space-x-2 mb-4">
-                        <i class="fas fa-mosque text-2xl text-primaryLight"></i>
+                        @if ($yayasan && $yayasan->logo)
+                            <img src="{{ asset('storage/' . $yayasan->logo) }}"
+                                alt="{{ $yayasan->nama_yayasan ?? 'Logo Pesantren' }}" class="h-20 w-auto">
+                        @else
+                            <img src="{{ asset('asset/logo_ponpes.png') }}" alt="Logo Ponpes Roudlotut Tullab"
+                                class="h-20 w-auto">
+                        @endif
                         @if ($yayasan && $yayasan->nama_yayasan)
                             <span class="font-bold text-xl">{{ $yayasan->nama_yayasan }}</span>
                         @else
@@ -300,7 +323,7 @@
 
                     <!-- Google Maps -->
                     @if ($yayasan && $yayasan->google_maps)
-                        <div class="mt-4 overflow-hidden rounded-lg">
+                        <div class="mt-4 overflow-hidden rounded-lg" style="height: 180px;">
                             {!! $yayasan->google_maps !!}
                         </div>
                     @else

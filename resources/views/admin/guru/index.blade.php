@@ -18,6 +18,20 @@
         <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">{{ session('error') }}</div>
     @endif
 
+    {{-- Search & Filter --}}
+    <div class="mb-6 flex gap-3">
+        <div class="flex-1">
+            <x-search-bar placeholder="Cari nama, NIP, atau email guru..." />
+        </div>
+        <select
+            onchange="window.location.href='{{ route('admin.guru.index') }}?status='+this.value+'&search={{ request('search') }}'"
+            class="border rounded-lg px-3 py-2 text-sm">
+            <option value="">Semua Status</option>
+            <option value="1" {{ request('status') === '1' ? 'selected' : '' }}>Aktif</option>
+            <option value="0" {{ request('status') === '0' ? 'selected' : '' }}>Nonaktif</option>
+        </select>
+    </div>
+
     <div class="bg-white rounded-xl shadow-md overflow-hidden">
         <table class="w-full">
             <thead class="bg-gray-50 border-b">

@@ -7,9 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 class Post extends Model
 {
     protected $table = 'posts';
+
     protected $fillable = [
         'title', 'content', 'post_type', 'post_category_id', 'author_id',
-        'published_at', 'slug', 'menu_order', 'featured_image'
+        'published_at', 'slug', 'menu_order', 'featured_image',
+    ];
+
+    protected $casts = [
+        'published_at' => 'datetime', // ← tambah ini
     ];
 
     public function category()

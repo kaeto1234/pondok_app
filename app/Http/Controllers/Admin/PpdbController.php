@@ -3,25 +3,32 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Mail\AkunSantriCreated;
+use App\Models\OrangTua;
 use App\Models\Pendaftaran;
 use App\Models\Santri;
 use App\Models\User;
-use App\Models\OrangTua;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
-use App\Mail\AkunSantriCreated;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class PpdbController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $pendaftarans = Pendaftaran::with('tahunAjaran')
+            ->when($request->search, fn ($q) => $q
+                ->where('nama_lengkap', 'like', '%'.$request->search.'%')
+                ->orWhere('no_pendaftaran', 'like', '%'.$request->search.'%')
+                ->orWhere('email', 'like', '%'.$request->search.'%')
+            )
+            ->when($request->status, fn ($q) => $q->where('status', $request->status))
             ->latest()
-            ->paginate(15);
+            ->paginate(15)
+            ->withQueryString(); // ← penting biar search term tidak hilang saat pindah halaman
 
         return view('admin.ppdb.index', compact('pendaftarans'));
     }
@@ -58,38 +65,38 @@ class PpdbController extends Controller
 
                 // 1. Update status pendaftaran
                 $pendaftaran->update([
-                    'status'            => 'diverifikasi',
+                    'status' => 'diverifikasi',
                     'diverifikasi_oleh' => auth()->id(),
                     'diverifikasi_pada' => now(),
-                    'catatan'           => $request->catatan,
+                    'catatan' => $request->catatan,
                 ]);
 
                 // 2. Generate NIS unik (Tahun + 4 digit, max 100 percobaan)
-                $nis      = null;
+                $nis = null;
                 $attempts = 0;
                 do {
-                    $candidate = date('Y') . str_pad(rand(1, 9999), 4, '0', STR_PAD_LEFT);
-                    if (!Santri::where('nis', $candidate)->exists()) {
+                    $candidate = date('Y').str_pad(rand(1, 9999), 4, '0', STR_PAD_LEFT);
+                    if (! Santri::where('nis', $candidate)->exists()) {
                         $nis = $candidate;
                     }
                     $attempts++;
-                } while (!$nis && $attempts < 100);
+                } while (! $nis && $attempts < 100);
 
-                if (!$nis) {
+                if (! $nis) {
                     throw new \Exception('Gagal generate NIS unik. Coba lagi.');
                 }
 
                 // 3. Buat data Santri
                 $santri = Santri::create([
-                    'nis'           => $nis,
-                    'pendaftaran_id'=> $pendaftaran->id,
-                    'nama_lengkap'  => $pendaftaran->nama_lengkap,
-                    'tempat_lahir'  => $pendaftaran->tempat_lahir,
+                    'nis' => $nis,
+                    'pendaftaran_id' => $pendaftaran->id,
+                    'nama_lengkap' => $pendaftaran->nama_lengkap,
+                    'tempat_lahir' => $pendaftaran->tempat_lahir,
                     'tanggal_lahir' => $pendaftaran->tanggal_lahir,
                     'jenis_kelamin' => $pendaftaran->jenis_kelamin,
-                    'alamat'        => $pendaftaran->alamat,
-                    'telepon'       => $pendaftaran->telepon_orang_tua,
-                    'status'        => 'aktif',
+                    'alamat' => $pendaftaran->alamat,
+                    'telepon' => $pendaftaran->telepon_orang_tua,
+                    'status' => 'aktif',
                 ]);
 
                 // 4. Generate password random
@@ -97,38 +104,39 @@ class PpdbController extends Controller
 
                 // 5. Buat akun User untuk wali santri
                 $user = User::create([
-                    'username'  => $pendaftaran->email,
-                    'email'     => $pendaftaran->email,
-                    'password'  => Hash::make($passwordPlain),
+                    'username' => $pendaftaran->email,
+                    'email' => $pendaftaran->email,
+                    'password' => Hash::make($passwordPlain),
                     'full_name' => $pendaftaran->nama_ayah ?? $pendaftaran->nama_orang_tua ?? $pendaftaran->nama_lengkap,
                     'is_active' => true,
-                    'role_id'   => 3,
+                    'role_id' => 3,
                 ]);
 
                 // 6. Buat data OrangTua
                 OrangTua::create([
-                    'santri_id'      => $santri->id,
-                    'user_id'        => $user->id,
-                    'nama_ayah'      => $pendaftaran->nama_ayah,
+                    'santri_id' => $santri->id,
+                    'user_id' => $user->id,
+                    'nama_ayah' => $pendaftaran->nama_ayah,
                     'pekerjaan_ayah' => $pendaftaran->pekerjaan_ayah,
-                    'nama_ibu'       => $pendaftaran->nama_ibu,
-                    'pekerjaan_ibu'  => $pendaftaran->pekerjaan_ibu,
-                    'telepon_ayah'   => $pendaftaran->telepon_orang_tua,
-                    'alamat'         => $pendaftaran->alamat,
+                    'nama_ibu' => $pendaftaran->nama_ibu,
+                    'pekerjaan_ibu' => $pendaftaran->pekerjaan_ibu,
+                    'telepon_ayah' => $pendaftaran->telepon_orang_tua,
+                    'alamat' => $pendaftaran->alamat,
                 ]);
 
                 // 7. Kirim email (di luar transaction tidak masalah, tapi log kalau gagal)
                 try {
                     Mail::to($user->email)->send(new AkunSantriCreated($santri, $user, $passwordPlain));
                 } catch (\Exception $e) {
-                    Log::error('Gagal kirim email PPDB: ' . $e->getMessage());
+                    Log::error('Gagal kirim email PPDB: '.$e->getMessage());
                     // Tidak throw — akun tetap dibuat meski email gagal
                 }
             });
 
         } catch (\Exception $e) {
-            Log::error('Gagal verifikasi PPDB: ' . $e->getMessage());
-            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            Log::error('Gagal verifikasi PPDB: '.$e->getMessage());
+
+            return back()->with('error', 'Terjadi kesalahan: '.$e->getMessage());
         }
 
         return redirect()->route('admin.ppdb.index')
@@ -151,10 +159,10 @@ class PpdbController extends Controller
         }
 
         $pendaftaran->update([
-            'status'            => 'ditolak',
+            'status' => 'ditolak',
             'diverifikasi_oleh' => auth()->id(),
             'diverifikasi_pada' => now(),
-            'catatan'           => $request->catatan,
+            'catatan' => $request->catatan,
         ]);
 
         return redirect()->route('admin.ppdb.index')

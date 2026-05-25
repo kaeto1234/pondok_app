@@ -58,7 +58,10 @@ class PpdbController extends Controller
             return back()->with('error', 'Pendaftaran sedang ditutup.');
         }
 
-        $noPendaftaran = 'REG-'.date('Ymd').'-'.Str::upper(Str::random(6));
+        // Generate nomor pendaftaran unik
+        do {
+            $noPendaftaran = 'REG-'.date('Ymd').'-'.Str::upper(Str::random(6));
+        } while (Pendaftaran::where('no_pendaftaran', $noPendaftaran)->exists());
 
         $pendaftaran = Pendaftaran::create([
             'no_pendaftaran' => $noPendaftaran,
@@ -69,7 +72,7 @@ class PpdbController extends Controller
             'jenis_kelamin' => $request->jenis_kelamin,
             'asal_sekolah' => $request->asal_sekolah,
             'alamat' => $request->alamat,
-            'nama_orang_tua' => $request->nama_ayah ?? $request->nama_orang_tua, // fallback
+            'nama_orang_tua' => $request->nama_ayah ?? $request->nama_orang_tua,
             'nama_ayah' => $request->nama_ayah,
             'pekerjaan_ayah' => $request->pekerjaan_ayah,
             'nama_ibu' => $request->nama_ibu,
@@ -80,15 +83,23 @@ class PpdbController extends Controller
             'status' => 'pending',
         ]);
 
-        // Upload berkas
+        // Upload berkas dengan nama file random (UUID)
         $berkasList = BerkasTahunAjaran::where('tahun_ajaran_id', $tahunAjaran->id)->get();
 
         foreach ($berkasList as $berkas) {
             $fieldName = 'berkas_'.$berkas->id;
+
             if ($request->hasFile($fieldName)) {
                 $file = $request->file($fieldName);
-                $fileName = time().'_'.$berkas->id.'_'.$file->getClientOriginalName();
-                $path = $file->storeAs('ppdb/'.$pendaftaran->id, $fileName, 'public');
+                $extension = $file->getClientOriginalExtension();
+
+                // Nama file random pakai UUID — tidak bisa ditebak
+                $fileName = Str::uuid().'.'.$extension;
+                $path = $file->storeAs(
+                    'ppdb/'.$pendaftaran->id,
+                    $fileName,
+                    'public'
+                );
 
                 FileBerkasPendaftaran::create([
                     'pendaftaran_id' => $pendaftaran->id,

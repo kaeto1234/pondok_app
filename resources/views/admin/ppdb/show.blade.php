@@ -107,7 +107,7 @@
                                 <!-- Perbaiki: berkasPeriode diganti berkasTahunAjaran -->
                                 <p class="text-sm font-semibold">
                                     {{ $file->berkasTahunAjaran->jenisBerkas->nama ?? 'Berkas tidak ditemukan' }}</p>
-                                <p class="text-xs text-gray-500">File: {{ basename($file->path_file) }}</p>
+                                {{--  <p class="text-xs text-gray-500">File: {{ basename($file->path_file) }}</p>  --}}
                             </div>
                             <a href="{{ asset('storage/' . $file->path_file) }}" target="_blank"
                                 class="text-navy-primary hover:text-navy-hover p-2 rounded-full bg-gray-100">

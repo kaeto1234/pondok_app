@@ -5,6 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Dashboard') - Ponpes Roudlotut Tullab</title>
+    {{-- Tambah setelah <title> --}}
+    @if (isset($yayasan) && $yayasan?->favicon)
+        <link rel="icon" type="image/x-icon" href="{{ asset('storage/' . $yayasan->favicon) }}">
+    @else
+        <link rel="icon" type="image/png" href="{{ asset('asset/logo_ponpes.png') }}">
+    @endif
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -178,9 +184,16 @@
                         <ul class="space-y-1">
                             <li>
                                 <a href="{{ route('admin.posts.index') }}"
-                                    class="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-[#2a4a7a] transition {{ request()->routeIs('admin.posts.*') ? 'bg-[#2a4a7a]' : '' }}">
+                                    class="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-[#2a4a7a] transition {{ request()->routeIs('admin.posts.index') ? 'bg-[#2a4a7a]' : '' }}">
                                     <i class="fas fa-newspaper w-5"></i>
-                                    <span>Artikel & Halaman</span>
+                                    <span>Artikel & Berita</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('admin.posts.pages') }}"
+                                    class="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-[#2a4a7a] transition {{ request()->routeIs('admin.posts.pages') ? 'bg-[#2a4a7a]' : '' }}">
+                                    <i class="fas fa-file-alt w-5"></i>
+                                    <span>Halaman Statis</span>
                                 </a>
                             </li>
                             <li>

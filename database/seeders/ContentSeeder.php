@@ -217,7 +217,11 @@ class ContentSeeder extends Seeder
             ['slug' => 'sejarah'],
             [
                 'title' => 'Sejarah Berdirinya Pondok Pesantren Roudlotut Tullab',
-                'content' => 'Pondok Pesantren Roudlotut Tullab Padang Singojuruh Banyuwangi didirikan oleh Agus Miftah Farid pada tanggal 6 April 2024...',
+                'content' => 'Sejarah Berdirinya Pondok Pesantren Roudlotut Tullab Padang Singojuruh Banyuwangi
+Pondok Pesantren Roudlotut Tullab Padang Singojuruh Banyuwangi didirikan oleh Agus Miftah Farid pada tanggal 6 April 2024. Berdirinya pondok ini dilatarbelakangi oleh cita-cita luhur untuk membangun lembaga pendidikan Islam yang berfokus pada pembinaan ilmu agama, akhlak mulia, serta mencetak generasi santri yang berpegang teguh pada nilai-nilai keislaman.
+Pada masa awal berdirinya, kegiatan pondok dimulai secara sederhana melalui pengajian kitab kuning sebagai inti pendidikan pesantren. Dari kegiatan ngaji kitab inilah Pondok Pesantren Roudlotut Tullab mulai berkembang sebagai tempat menimba ilmu agama dan pembinaan karakter santri.
+Di bawah asuhan Agus Miftah Farid, pondok terus berkembang baik dalam sistem pendidikan maupun sarana penunjang. Tidak hanya menyelenggarakan pendidikan kepesantrenan melalui madrasah diniyah, pondok juga mengembangkan pendidikan formal sebagai bentuk ikhtiar memadukan ilmu agama dan ilmu umum.
+Seiring perjalanan waktu, Pondok Pesantren Roudlotut Tullab berupaya menjadi lembaga pendidikan yang menjaga tradisi pesantren salaf melalui kajian kitab, sekaligus menjawab kebutuhan zaman melalui pengembangan lembaga pendidikan yang lebih luas. Dengan semangat keilmuan, pengabdian, dan pembinaan akhlakul karimah, pondok ini diharapkan terus melahirkan santri yang berilmu, beradab, dan bermanfaat bagi umat.',
                 'post_type' => 'page',
                 'post_category_id' => $categories['profil']->id,
                 'author_id' => 1,
@@ -230,7 +234,19 @@ class ContentSeeder extends Seeder
             ['slug' => 'visi-misi'],
             [
                 'title' => 'Visi & Misi Pondok Pesantren Roudlotut Tullab',
-                'content' => "VISI:\nPondok Pesantren Roudlotut Tullab adalah lembaga pendidikan...",
+                'content' => 'VISI :
+Pondok Pesantren Roudlotut Tullab adalah lembaga
+pendidikan dan pengajaran islam yang sejak
+berdirinya tetap mempertahankan konsep salafiyah
+dengan menganut Thoriqoh Ta’lim wa Ta’allum,
+senantiasa menjadikan santri yang berakhlaqul karimah,
+serta menjadi pengembangan keislaman 
+dan dakwah multikultural.
+MISI :
+1.Mengembangkan pesantren secara keilmuan dan
+ kelembagaan.
+2.Melakukan pencerahan kepada masyarakat melalui kegiatan Ta’allum, Tarbiyah, dan Ta’dib.
+3.Meningkatkan kompetensi lulusan Pondok Pesantren melalui pembekalan moral, skil, dan penguatan di bidang ilmiyah dan amaliyah.',
                 'post_type' => 'page',
                 'post_category_id' => $categories['profil']->id,
                 'author_id' => 1,
@@ -248,7 +264,7 @@ class ContentSeeder extends Seeder
                 'post_category_id' => $categories['profil']->id,
                 'author_id' => 1,
                 'published_at' => now(),
-                'featured_image' => null,
+                'featured_image' => '/asset/struktur.png',
             ]
         );
 
@@ -258,7 +274,17 @@ class ContentSeeder extends Seeder
             ['slug' => 'sambutan'],
             [
                 'title' => 'Sambutan Pimpinan',
-                'content' => "Assalamu'alaikum Warahmatullahi Wabarakatuh...",
+                'content' => 'Assalamu’alaikum Warahmatullahi Wabarakatuh
+Alhamdulillahi Rabbil ‘Alamin, segala puji hanya milik Allah SWT yang telah melimpahkan rahmat, taufik, dan hidayah-Nya kepada kita semua. Shalawat serta salam semoga senantiasa tercurah kepada junjungan kita Nabi Muhammad SAW, beserta keluarga, sahabat, dan seluruh pengikutnya hingga akhir zaman.
+Dengan penuh rasa syukur, kami menyambut kehadiran Pondok Pesantren Roudlotut Tullab sebagai lembaga pendidikan Islam yang berkomitmen membina generasi berilmu, berakhlakul karimah, dan berpegang teguh pada ajaran Ahlussunnah wal Jama’ah.
+Pondok Pesantren Roudlotut Tullab didirikan sebagai wadah menuntut ilmu, memperdalam kajian kitab-kitab salaf, membentuk karakter santri yang mandiri, disiplin, serta berjiwa ukhuwah Islamiyah. Kami berharap pesantren ini menjadi taman ilmu dan keberkahan, sebagaimana makna “Roudlotut Tullab” sebagai taman bagi para penuntut ilmu.
+Di pesantren ini, pendidikan tidak hanya berfokus pada penguasaan ilmu agama melalui madrasah diniyah dan pengajian kitab, namun juga mendukung pendidikan formal serta pembinaan keterampilan sebagai bekal santri dalam menghadapi kehidupan bermasyarakat.
+Kami menyadari bahwa membangun dan mengembangkan pesantren membutuhkan dukungan dari banyak pihak. Oleh karena itu, kami mengajak seluruh wali santri, masyarakat, dan para muhibbin untuk bersama-sama mendukung perjuangan pendidikan ini, demi terwujudnya generasi yang alim, shalih, dan bermanfaat bagi agama, bangsa, dan umat.
+Semoga Pondok Pesantren Roudlotut Tullab senantiasa diberi keberkahan oleh Allah SWT, menjadi pusat lahirnya kader-kader ulama dan penerus perjuangan Islam.
+
+Wassalamu’alaikum Warahmatullahi Wabarakatuh
+23 April 2026
+Pengasuh Pondok Pesantren Roudlotut Tullab. Agus Miftah Farid',
                 'post_type' => 'page',
                 'post_category_id' => $categories['sambutan']->id,
                 'author_id' => 1,

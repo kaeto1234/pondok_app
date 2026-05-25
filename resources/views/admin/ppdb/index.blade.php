@@ -13,6 +13,21 @@
         </div>
     @endif
 
+    {{-- Search & Filter --}}
+    <div class="mb-6 flex gap-3">
+        <div class="flex-1">
+            <x-search-bar placeholder="Cari nama atau no. pendaftaran..." />
+        </div>
+        <select
+            onchange="window.location.href='{{ route('admin.ppdb.index') }}?status='+this.value+'&search={{ request('search') }}'"
+            class="border rounded-lg px-3 py-2 text-sm">
+            <option value="">Semua Status</option>
+            <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
+            <option value="diverifikasi" {{ request('status') == 'diverifikasi' ? 'selected' : '' }}>Diverifikasi</option>
+            <option value="ditolak" {{ request('status') == 'ditolak' ? 'selected' : '' }}>Ditolak</option>
+        </select>
+    </div>
+
     <div class="bg-white rounded-xl shadow-md overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">

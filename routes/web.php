@@ -81,6 +81,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth.custom', 'role:admin']
 
     Route::resource('categories', PostCategoryController::class);
     Route::resource('posts', PostController::class);
+    Route::get('/pages', [PostController::class, 'pages'])->name('posts.pages');
     Route::resource('menus', MenuController::class);
 
     Route::get('/yayasan', [YayasanController::class, 'index'])->name('yayasan.index');
