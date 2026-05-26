@@ -113,56 +113,73 @@
         </form>
     </div>
 
-    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            $('#content').summernote({
-                height: 500,
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'underline', 'clear']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture']],
-                    ['view', ['fullscreen', 'codeview']]
-                ]
+    @push('scripts')
+        <script>
+            $(document).ready(function() {
+                $('#content').summernote({
+                    height: 500,
+                    lang: 'id-ID',
+                    toolbar: [
+                        ['style', ['style']],
+                        ['font', ['bold', 'italic', 'underline', 'strikethrough', 'superscript',
+                            'subscript', 'clear'
+                        ]],
+                        ['fontname', ['fontname']],
+                        ['fontsize', ['fontsize']],
+                        ['color', ['color']],
+                        ['para', ['ul', 'ol', 'paragraph']],
+                        ['height', ['height']],
+                        ['table', ['table']],
+                        ['insert', ['link', 'picture', 'video', 'hr']],
+                        ['view', ['fullscreen', 'codeview', 'help']]
+                    ],
+                    styleTags: ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote', 'pre'],
+                    fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', 'Helvetica',
+                        'Times New Roman'
+                    ],
+                    fontSizes: ['8', '9', '10', '11', '12', '14', '16', '18', '20', '22', '24', '28', '32',
+                        '36', '48'
+                    ],
+                    callbacks: {
+                        onImageUpload: function(files) {
+                            var data = new FormData();
+                            data.append('file', files[0]);
+                            data.append('_token', '{{ csrf_token() }}');
+                            $.ajax({
+                                url: '{{ route('admin.posts.upload-image') }}',
+                                type: 'POST',
+                                data: data,
+                                cache: false,
+                                contentType: false,
+                                processData: false,
+                                success: function(url) {
+                                    $('#content').summernote('insertImage', url);
+                                },
+                                error: function(err) {
+                                    console.log(err);
+                                }
+                            });
+                        }
+                    }
+                });
             });
-        });
 
-        function toggleHapusGambar(checkbox) {
-            const uploadSection = document.getElementById('uploadSection');
-            const gantiBtn = document.getElementById('gantiBtn');
-            if (checkbox.checked) {
-                uploadSection.classList.remove('hidden');
-                if (gantiBtn) gantiBtn.classList.add('hidden');
-            } else {
-                uploadSection.classList.add('hidden');
-                if (gantiBtn) gantiBtn.classList.remove('hidden');
+            function previewImage(input) {
+                if (input.files && input.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = e => {
+                        document.getElementById('previewImg').src = e.target.result;
+                        document.getElementById('imagePreview').classList.remove('hidden');
+                    };
+                    reader.readAsDataURL(input.files[0]);
+                }
             }
-        }
 
-        function gantiGambar() {
-            document.getElementById('uploadSection').classList.remove('hidden');
-            document.getElementById('gantiBtn').classList.add('hidden');
-        }
-
-        function previewImage(input) {
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = e => {
-                    document.getElementById('previewImg').src = e.target.result;
-                    document.getElementById('imagePreview').classList.remove('hidden');
-                };
-                reader.readAsDataURL(input.files[0]);
+            function removeImagePreview() {
+                document.getElementById('imageInput').value = '';
+                document.getElementById('imagePreview').classList.add('hidden');
+                document.getElementById('previewImg').src = '';
             }
-        }
-
-        function removeImagePreview() {
-            document.getElementById('imageInput').value = '';
-            document.getElementById('imagePreview').classList.add('hidden');
-        }
-    </script>
+        </script>
+    @endpush
 @endsection

@@ -52,8 +52,10 @@ Route::get('/kategori/{slug}', function ($slug) {
     $posts = Post::where('post_category_id', $category->id)
         ->where('post_type', 'post')
         ->whereNotNull('published_at')
+        ->when(request('search'), fn ($q) => $q->where('title', 'like', '%'.request('search').'%'))
         ->orderBy('published_at', 'desc')
-        ->paginate(12);
+        ->paginate(12)
+        ->withQueryString();
 
     return view('category', compact('category', 'posts'));
 })->name('category.list');

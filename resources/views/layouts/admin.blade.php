@@ -5,10 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Dashboard') - Ponpes Roudlotut Tullab</title>
-    @if (isset($yayasan) && $yayasan?->favicon)
-        <link rel="icon" type="image/x-icon" href="{{ asset('storage/' . $yayasan->favicon) }}">
+    @if (isset($yayasan) && $yayasan?->logo)
+        <link rel="icon" type="image/x-icon" href="{{ asset('storage/' . $yayasan->logo) }}">
     @else
-        <link rel="icon" type="image/png" href="{{ asset('asset/logo_ponpes.png') }}">
+        <link rel="icon" type="image/png" href="{{ asset('assets/logo_ponpes.png') }}">
     @endif
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])

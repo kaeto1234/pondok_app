@@ -5,10 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>500 - Terjadi Kesalahan</title>
-    @if (isset($yayasan) && $yayasan?->favicon)
-        <link rel="icon" type="image/x-icon" href="{{ asset('storage/' . $yayasan->favicon) }}">
+    @if (isset($yayasan) && $yayasan?->logo)
+        <link rel="icon" type="image/x-icon" href="{{ asset('storage/' . $yayasan->logo) }}">
     @else
-        <link rel="icon" type="image/png" href="{{ asset('asset/logo_ponpes.png') }}">
+        <link rel="icon" type="image/png" href="{{ asset('assets/logo_ponpes.png') }}">
     @endif
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -48,8 +48,11 @@
         <p class="text-gray-500 mb-2 max-w-md mx-auto">
             Maaf, server sedang mengalami gangguan. Tim kami sedang bekerja untuk memperbaikinya.
         </p>
-        <p class="text-gray-400 text-sm mb-8 italic">
-            "إِنَّ مَعَ الْعُسْرِ يُسْرًا" — Sesungguhnya bersama kesulitan ada kemudahan.
+        <p class="text-gray-400 text-sm my-5 italic">
+            "إِنَّ مَعَ الْعُسْرِ يُسْرًا" 
+        </p>
+        <p class="text-gray-400 text-sm mb-8">
+            Sesungguhnya bersama kesulitan ada kemudahan.
         </p>
 
         <div class="flex gap-3 justify-center flex-wrap">
@@ -64,7 +67,7 @@
         </div>
 
         <p class="text-gray-400 text-xs mt-8">
-            © {{ date('Y') }} Pondok Pesantren Roudlotut Tullab
+            © {{ date('Y') }} {{ $yayasan->nama_yayasan }}
         </p>
     </div>
 </body>

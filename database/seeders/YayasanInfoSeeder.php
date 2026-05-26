@@ -14,9 +14,9 @@ class YayasanInfoSeeder extends Seeder
             [
                 'nama_yayasan' => 'Pondok Pesantren Roudlotut Tullab',
                 'alamat' => 'Jl. KH. Abdullah Hasbullah No.8, Krajan, Padang, Kec. Singojuruh, Kabupaten Banyuwangi, Jawa Timur 68464',
-                'telepon' => '082231000202',
+                'telepon' => '082241808808',
                 'email' => 'roudlotuttullab01@gmail.com',
-                'whatsapp' => '6281234567890',
+                'whatsapp' => '6282241808808',
                 'facebook' => 'https://www.facebook.com/share/1BEb9zPTTM/',
                 'instagram' => 'https://www.instagram.com/ponpes_roudlotuttullab?igsh=MXV5OW1mZGlrOGloNQ==',
                 'youtube' => 'https://youtube.com/@roudlotuttullab_channel?si=ZKJrflxOZssaesc_',

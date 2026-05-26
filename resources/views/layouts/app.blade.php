@@ -5,10 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Pondok Pesantren Roudlotut Tullab')</title>
-    @if (isset($yayasan) && $yayasan?->favicon)
-        <link rel="icon" type="image/x-icon" href="{{ asset('storage/' . $yayasan->favicon) }}">
+    @if (isset($yayasan) && $yayasan?->logo)
+        <link rel="icon" type="image/x-icon" href="{{ asset('storage/' . $yayasan->logo) }}">
     @else
-        <link rel="icon" type="image/png" href="{{ asset('asset/logo_ponpes.png') }}">
+        <link rel="icon" type="image/png" href="{{ asset('assets/logo_ponpes.png') }}">
     @endif
 
     <!-- Tailwind CSS -->
@@ -320,8 +320,7 @@
 
             <!-- Copyright -->
             <div class="border-t border-gray-800 mt-10 pt-6 text-center text-gray-500 text-sm">
-                &copy; {{ date('Y') }} Pondok Pesantren Roudlotut Tullab. All rights reserved.
-            </div>
+                &copy; {{ date('Y') }} {{ $yayasan->nama_yayasan }}
         </div>
     </footer>
     <script>

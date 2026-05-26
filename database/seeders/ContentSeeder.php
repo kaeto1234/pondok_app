@@ -264,7 +264,7 @@ MISI :
                 'post_category_id' => $categories['profil']->id,
                 'author_id' => 1,
                 'published_at' => now(),
-                'featured_image' => '/public/asset/struktur.png',
+                'featured_image' => '/public/assets/struktur.png',
             ]
         );
 
