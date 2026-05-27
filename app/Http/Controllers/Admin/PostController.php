@@ -169,4 +169,12 @@ class PostController extends Controller
 
         return redirect()->route($route)->with('success', 'Berhasil dihapus.');
     }
+
+    public function uploadImage(Request $request)
+    {
+        $request->validate(['file' => 'required|image|max:2048']);
+        $path = $request->file('file')->store('posts/content', 'public');
+
+        return asset('storage/'.$path);
+    }
 }

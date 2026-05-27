@@ -113,55 +113,27 @@
         </form>
     </div>
 
+    @push('styles')
+        <link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.css" rel="stylesheet">
+    @endpush
+
     @push('scripts')
+        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.js"></script>
         <script>
-            $(document).ready(function() {
-                $('#content').summernote({
-                    height: 500,
-                    lang: 'id-ID',
-                    toolbar: [
-                        ['style', ['style']],
-                        ['font', ['bold', 'italic', 'underline', 'strikethrough', 'superscript',
-                            'subscript', 'clear'
-                        ]],
-                        ['fontname', ['fontname']],
-                        ['fontsize', ['fontsize']],
-                        ['color', ['color']],
-                        ['para', ['ul', 'ol', 'paragraph']],
-                        ['height', ['height']],
-                        ['table', ['table']],
-                        ['insert', ['link', 'picture', 'video', 'hr']],
-                        ['view', ['fullscreen', 'codeview', 'help']]
-                    ],
-                    styleTags: ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote', 'pre'],
-                    fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', 'Helvetica',
-                        'Times New Roman'
-                    ],
-                    fontSizes: ['8', '9', '10', '11', '12', '14', '16', '18', '20', '22', '24', '28', '32',
-                        '36', '48'
-                    ],
-                    callbacks: {
-                        onImageUpload: function(files) {
-                            var data = new FormData();
-                            data.append('file', files[0]);
-                            data.append('_token', '{{ csrf_token() }}');
-                            $.ajax({
-                                url: '{{ route('admin.posts.upload-image') }}',
-                                type: 'POST',
-                                data: data,
-                                cache: false,
-                                contentType: false,
-                                processData: false,
-                                success: function(url) {
-                                    $('#content').summernote('insertImage', url);
-                                },
-                                error: function(err) {
-                                    console.log(err);
-                                }
-                            });
-                        }
-                    }
-                });
+            $('#content').summernote({
+                placeholder: 'Tulis konten di sini...',
+                tabsize: 2,
+                height: 500,
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'italic', 'underline', 'strikethrough', 'clear']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture', 'video']],
+                    ['view', ['fullscreen', 'codeview', 'help']]
+                ]
             });
 
             function previewImage(input) {
