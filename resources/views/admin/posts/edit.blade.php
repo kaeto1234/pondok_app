@@ -1,7 +1,6 @@
 @extends('layouts.admin')
 @section('title', $type == 'page' ? 'Edit Halaman' : 'Edit Artikel')
 @section('content')
-
     <div class="mb-6">
         <h1 class="text-2xl font-bold text-gray-800">
             {{ $type == 'page' ? 'Edit Halaman Statis' : 'Edit Artikel' }}
@@ -113,28 +112,26 @@
         </form>
     </div>
 
-    @push('styles')
-        <link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.css" rel="stylesheet">
-    @endpush
+    <x-summernote />
 
     @push('scripts')
-        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.js"></script>
         <script>
-            $('#content').summernote({
-                placeholder: 'Tulis konten di sini...',
-                tabsize: 2,
-                height: 500,
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'italic', 'underline', 'strikethrough', 'clear']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture', 'video']],
-                    ['view', ['fullscreen', 'codeview', 'help']]
-                ]
-            });
+            function toggleHapusGambar(checkbox) {
+                const uploadSection = document.getElementById('uploadSection');
+                const gantiBtn = document.getElementById('gantiBtn');
+                if (checkbox.checked) {
+                    uploadSection.classList.remove('hidden');
+                    if (gantiBtn) gantiBtn.classList.add('hidden');
+                } else {
+                    uploadSection.classList.add('hidden');
+                    if (gantiBtn) gantiBtn.classList.remove('hidden');
+                }
+            }
+
+            function gantiGambar() {
+                document.getElementById('uploadSection').classList.remove('hidden');
+                document.getElementById('gantiBtn').classList.add('hidden');
+            }
 
             function previewImage(input) {
                 if (input.files && input.files[0]) {
@@ -154,4 +151,6 @@
             }
         </script>
     @endpush
+
+
 @endsection

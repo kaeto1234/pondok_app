@@ -1,7 +1,6 @@
 @extends('layouts.admin')
 @section('title', $type == 'page' ? 'Tambah Halaman' : 'Tambah Artikel')
 @section('content')
-
     <div class="mb-6">
         <h1 class="text-2xl font-bold text-gray-800">
             {{ $type == 'page' ? 'Tambah Halaman Statis' : 'Tambah Artikel' }}
@@ -90,29 +89,10 @@
         </form>
     </div>
 
-    @push('styles')
-        <link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.css" rel="stylesheet">
-    @endpush
+    <x-summernote />
 
     @push('scripts')
-        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.js"></script>
         <script>
-            $('#content').summernote({
-                placeholder: 'Tulis konten di sini...',
-                tabsize: 2,
-                height: 500,
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'italic', 'underline', 'strikethrough', 'clear']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture', 'video']],
-                    ['view', ['fullscreen', 'codeview', 'help']]
-                ]
-            });
-
             function previewImage(input) {
                 if (input.files && input.files[0]) {
                     const reader = new FileReader();
@@ -131,4 +111,5 @@
             }
         </script>
     @endpush
+
 @endsection
