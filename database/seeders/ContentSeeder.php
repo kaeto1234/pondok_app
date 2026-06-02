@@ -91,7 +91,7 @@ class ContentSeeder extends Seeder
             ['slug' => 'hero-btn-kiri'],
             [
                 'title' => 'Hero Button Kiri',
-                'content' => 'Pelajari Lebih Lanjut|/sejarah|bg-white text-primary',
+                'content' => 'Pelajari Lebih Lanjut|/page/sejarah|bg-white text-primary',
                 'post_type' => 'post',
                 'post_category_id' => $categories['hero']->id,
                 'author_id' => 1,
