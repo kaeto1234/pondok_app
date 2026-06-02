@@ -72,7 +72,7 @@
                         <div class="text-gray-600 dark:text-gray-300 leading-relaxed mb-4">
                             {!! Str::limit(strip_tags($sambutan->content), 300) !!}
                         </div>
-                        <a href="{{ url('/' . $sambutan->slug) }}"
+                        <a href="{{ $sambutan->link ? $sambutan->link->url : url('/page/' . $sambutan->slug) }}"
                             class="text-primary font-semibold hover:underline mt-2 inline-block">Baca selengkapnya →</a>
                     </div>
 

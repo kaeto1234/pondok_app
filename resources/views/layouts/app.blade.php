@@ -65,7 +65,7 @@
                         <img src="{{ asset('storage/' . $yayasan->logo) }}"
                             alt="{{ $yayasan->nama_yayasan ?? 'Logo Pesantren' }}" class="h-20 w-auto">
                     @else
-                        <img src="{{ asset('asset/logo_ponpes.png') }}" alt="Logo Ponpes Roudlotut Tullab"
+                        <img src="{{ asset('assets/logo_ponpes.png') }}" alt="Logo Ponpes Roudlotut Tullab"
                             class="h-20 w-auto">
                     @endif
                     <span class="text-white font-bold text-xl whitespace-nowrap">Roudlotut Tullab</span>
