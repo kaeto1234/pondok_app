@@ -118,4 +118,29 @@ class SantriController extends Controller
             $materi->judul.'.'.pathinfo($materi->path_file, PATHINFO_EXTENSION)
         );
     }
+
+    public function printRapor()
+    {
+        $orangTua = OrangTua::where('user_id', session('user_id'))->first();
+
+        if (! $orangTua || ! $orangTua->santri) {
+            return back()->with('error', 'Data santri tidak ditemukan.');
+        }
+
+        $santri = $orangTua->santri;
+        $santriTingkat = $santri->santriTingkat()->with(['tingkat', 'tahunAjaran'])->where('status', 'aktif')->first();
+
+        if (! $santriTingkat) {
+            return back()->with('error', 'Santri belum memiliki tingkat aktif.');
+        }
+
+        $nilaiData = Nilai::with(['kurikulum.mataPelajaran', 'jenisUjian'])
+            ->where('santri_tingkat_id', $santriTingkat->id)
+            ->get()
+            ->groupBy('kurikulum.mata_pelajaran_id');
+
+        $jenisUjianList = JenisUjian::all();
+
+        return view('wali.santri.rapor-print', compact('santri', 'santriTingkat', 'nilaiData', 'jenisUjianList'));
+    }
 }

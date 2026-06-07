@@ -13,6 +13,8 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->preventRequestForgery();
+
         $middleware->alias([
             'auth.custom' => Authenticate::class,
             'role' => RoleMiddleware::class,

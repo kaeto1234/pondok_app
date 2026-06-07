@@ -186,6 +186,7 @@ Route::prefix('wali')->name('wali.')->middleware(['auth.custom', 'role:wali'])->
 
     // penilian,absensi,download materi & nilai
     Route::get('/nilai', [WaliSantriController::class, 'nilai'])->name('santri.nilai');
+    Route::get('/nilai/print', [WaliSantriController::class, 'printRapor'])->name('santri.print');
     Route::get('/absensi', [WaliSantriController::class, 'absensi'])->name('santri.absensi');
     Route::get('/materi', [WaliSantriController::class, 'materi'])->name('santri.materi');
     Route::get('/materi/{id}/download', [WaliSantriController::class, 'download'])->name('santri.materi.download');
