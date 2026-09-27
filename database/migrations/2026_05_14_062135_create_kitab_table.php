@@ -14,7 +14,7 @@ return new class extends Migration
             $table->string('nama_kitab', 100);
             $table->string('pengarang', 100)->nullable();
             $table->string('penerbit', 100)->nullable();
-            $table->year('tahun_terbit')->nullable();
+            $table->smallInteger('tahun_terbit')->nullable();
             $table->text('deskripsi')->nullable();
             $table->timestamps();
         });

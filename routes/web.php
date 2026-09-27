@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\JadwalMengajarController;
 use App\Http\Controllers\Admin\JenisBerkasController;
 use App\Http\Controllers\Admin\KitabController;
 use App\Http\Controllers\Admin\KurikulumController;
+use App\Http\Controllers\Admin\JenisUjianController;
 use App\Http\Controllers\Admin\MataPelajaranController;
 use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\PostCategoryController;
@@ -128,6 +129,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth.custom', 'role:admin']
     Route::post('/kurikulum', [KurikulumController::class, 'store'])->name('kurikulum.store');
     Route::delete('/kurikulum/{id}', [KurikulumController::class, 'destroy'])->name('kurikulum.destroy');
 
+    // jenis ujian
+    Route::resource('jenis-ujian', JenisUjianController::class)->except(['show', 'create']);
+
     // Jadwal Mengajar
     Route::get('/jadwal-mengajar', [JadwalMengajarController::class, 'index'])->name('jadwal-mengajar.index');
     Route::post('/jadwal-mengajar', [JadwalMengajarController::class, 'store'])->name('jadwal-mengajar.store');
@@ -191,3 +195,7 @@ Route::prefix('wali')->name('wali.')->middleware(['auth.custom', 'role:wali'])->
     Route::get('/materi', [WaliSantriController::class, 'materi'])->name('santri.materi');
     Route::get('/materi/{id}/download', [WaliSantriController::class, 'download'])->name('santri.materi.download');
 });
+
+// Route::get('/test-500', function () {
+//     abort(500);
+// });

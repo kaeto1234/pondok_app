@@ -19,17 +19,12 @@ class GuruController extends Controller
                 ->orWhere('nip', 'like', '%'.$request->search.'%')
                 ->orWhere('email', 'like', '%'.$request->search.'%')
             )
-            ->when($request->status, fn ($q) => $q->where('is_active', $request->status))
+            ->when($request->filled('status'), fn ($q) => $q->where('is_active', $request->status))
             ->orderBy('nama_lengkap')
             ->paginate(15)
             ->withQueryString();
 
         return view('admin.guru.index', compact('gurus'));
-    }
-
-    public function create()
-    {
-        return view('admin.guru.create');
     }
 
     public function store(Request $request)

@@ -11,19 +11,15 @@ class TahunAjaranController extends Controller
     public function index()
     {
         $tahunAjaran = TahunAjaran::orderBy('nama_tahun', 'desc')->get();
-        return view('admin.tahun-ajaran.index', compact('tahunAjaran'));
-    }
 
-    public function create()
-    {
-        return view('admin.tahun-ajaran.create');
+        return view('admin.tahun-ajaran.index', compact('tahunAjaran'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'nama_tahun'      => 'required|string|max:20|unique:tahun_ajaran,nama_tahun',
-            'tanggal_mulai'   => 'nullable|date',
+            'nama_tahun' => 'required|string|max:20|unique:tahun_ajaran,nama_tahun',
+            'tanggal_mulai' => 'nullable|date',
             'tanggal_selesai' => 'nullable|date|after_or_equal:tanggal_mulai',
         ]);
 
@@ -36,6 +32,7 @@ class TahunAjaranController extends Controller
     public function edit($id)
     {
         $tahunAjaran = TahunAjaran::findOrFail($id);
+
         return view('admin.tahun-ajaran.edit', compact('tahunAjaran'));
     }
 
@@ -44,8 +41,8 @@ class TahunAjaranController extends Controller
         $tahunAjaran = TahunAjaran::findOrFail($id);
 
         $request->validate([
-            'nama_tahun'      => 'required|string|max:20|unique:tahun_ajaran,nama_tahun,' . $id,
-            'tanggal_mulai'   => 'nullable|date',
+            'nama_tahun' => 'required|string|max:20|unique:tahun_ajaran,nama_tahun,'.$id,
+            'tanggal_mulai' => 'nullable|date',
             'tanggal_selesai' => 'nullable|date|after_or_equal:tanggal_mulai',
         ]);
 
@@ -81,6 +78,6 @@ class TahunAjaranController extends Controller
         $tahunAjaran->update(['is_active' => true]);
 
         return redirect()->route('admin.tahun-ajaran.index')
-            ->with('success', 'Tahun ajaran ' . $tahunAjaran->nama_tahun . ' diaktifkan.');
+            ->with('success', 'Tahun ajaran '.$tahunAjaran->nama_tahun.' diaktifkan.');
     }
 }

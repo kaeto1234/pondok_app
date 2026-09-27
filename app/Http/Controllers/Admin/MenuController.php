@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Menu;
-use App\Models\MenuPost;
 use App\Models\MenuLink;
+use App\Models\MenuPost;
 use App\Models\Post;
 use Illuminate\Http\Request;
 
@@ -17,15 +17,11 @@ class MenuController extends Controller
             ->whereNull('parent_id')
             ->orderBy('order')
             ->get();
-        return view('admin.menus.index', compact('menus'));
-    }
 
-    public function create()
-    {
-        $menus = Menu::all();
-        // ✅ AMBIL SEMUA POST (PAGE DAN POST)
-        $posts = Post::all(); 
-        return view('admin.menus.create', compact('menus', 'posts'));
+        $menusList = Menu::all(); // untuk dropdown parent
+        $posts = Post::orderBy('title')->get(); // untuk dropdown post
+
+        return view('admin.menus.index', compact('menus', 'menusList', 'posts'));
     }
 
     public function store(Request $request)
@@ -33,6 +29,8 @@ class MenuController extends Controller
         $request->validate([
             'label' => 'required|string|max:100',
             'type' => 'required|in:post,link',
+            'post_id' => 'required_if:type,post|nullable|exists:posts,id',
+            'url' => 'required_if:type,link|nullable|string|max:255',
         ]);
 
         $menu = Menu::create([
@@ -61,14 +59,21 @@ class MenuController extends Controller
     {
         $menu = Menu::with(['post', 'link'])->findOrFail($id);
         $menus = Menu::all();
-        // ✅ AMBIL SEMUA POST (PAGE DAN POST)
-        $posts = Post::all();
+        $posts = Post::orderBy('title')->get();
+
         return view('admin.menus.edit', compact('menu', 'menus', 'posts'));
     }
 
     public function update(Request $request, $id)
     {
         $menu = Menu::findOrFail($id);
+
+        $request->validate([
+            'label' => 'required|string|max:100',
+            'type' => 'required|in:post,link',
+            'post_id' => 'required_if:type,post|nullable|exists:posts,id',
+            'url' => 'required_if:type,link|nullable|string|max:255',
+        ]);
 
         $menu->update([
             'label' => $request->label,

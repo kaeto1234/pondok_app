@@ -14,11 +14,19 @@ class AppServiceProvider extends ServiceProvider
         // Share data footer ke semua view
         View::composer('*', function ($view) {
             $yayasan = YayasanInfo::first();
-            $quickLinks = Menu::whereNull('parent_id')
+
+            // ✅ QUICK LINKS dengan eager load children, link, post
+            $quickLinks = Menu::with([
+                    'children.link',
+                    'children.post.post',
+                    'link',
+                    'post.post'
+                ])
+                ->whereNull('parent_id')
                 ->where('is_active', true)
                 ->orderBy('order')
                 ->get();
-            
+
             $view->with(compact('yayasan', 'quickLinks'));
         });
     }

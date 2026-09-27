@@ -11,12 +11,8 @@ class JenisBerkasController extends Controller
     public function index()
     {
         $jenisBerkas = JenisBerkas::orderBy('nama')->get();
-        return view('admin.jenis-berkas.index', compact('jenisBerkas'));
-    }
 
-    public function create()
-    {
-        return view('admin.jenis-berkas.create');
+        return view('admin.jenis-berkas.index', compact('jenisBerkas'));
     }
 
     public function store(Request $request)
@@ -40,6 +36,7 @@ class JenisBerkasController extends Controller
     public function edit($id)
     {
         $jenisBerkas = JenisBerkas::findOrFail($id);
+
         return view('admin.jenis-berkas.edit', compact('jenisBerkas'));
     }
 
@@ -48,7 +45,7 @@ class JenisBerkasController extends Controller
         $jenisBerkas = JenisBerkas::findOrFail($id);
 
         $request->validate([
-            'nama' => 'required|string|max:100|unique:jenis_berkas,nama,' . $id,
+            'nama' => 'required|string|max:100|unique:jenis_berkas,nama,'.$id,
             'tipe_file' => 'nullable|string|max:50',
             'ukuran_maksimal' => 'nullable|integer|min:1',
         ]);
@@ -66,14 +63,14 @@ class JenisBerkasController extends Controller
     public function destroy($id)
     {
         $jenisBerkas = JenisBerkas::findOrFail($id);
-        
+
         // Cek apakah jenis berkas sudah digunakan di berkas_tahun_ajaran
         if ($jenisBerkas->berkasTahunAjaran()->count() > 0) {
             return back()->with('error', 'Jenis berkas ini tidak dapat dihapus karena sudah digunakan di beberapa tahun ajaran.');
         }
-        
+
         $jenisBerkas->delete();
-        
+
         return redirect()->route('admin.jenis-berkas.index')
             ->with('success', 'Jenis berkas berhasil dihapus.');
     }

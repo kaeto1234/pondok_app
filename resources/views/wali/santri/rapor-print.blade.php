@@ -131,7 +131,7 @@
         <h3>(الامتحان لنصف الدراسي الأول)</h3>
     </div>
 
-    <!-- Info Santri (dari database) -->
+    <!-- Info Santri -->
     <table class="info-santri">
         <tr>
             <td style="width: 150px;">: الفصل</td>
@@ -146,14 +146,12 @@
         <thead>
             <tr>
                 <th rowspan="2">المواد</th>
-                <th colspan="2">الدرجة</th>
-                <th rowspan="2">اجمالي<br>الامتحان</th>
+                @foreach ($jenisUjianList as $ju)
+                    <th>{{ $ju->nama }}<br><small>({{ $ju->bobot }}%)</small></th>
+                @endforeach
+                <th rowspan="2">النهاية</th>
                 <th rowspan="2">نتيجة</th>
                 <th rowspan="2">المعدلة للفصل</th>
-            </tr>
-            <tr>
-                <th>التحريري</th>
-                <th>الشفهي</th>
             </tr>
         </thead>
         <tbody>
@@ -165,41 +163,51 @@
             @foreach ($nilaiData as $mapelId => $nilaiPerMapel)
                 @php
                     $mapel = $nilaiPerMapel->first()->kurikulum->mataPelajaran;
-                    $nilaiTulis = 0;
-                    $nilaiLisan = 0;
+
+                    // Hitung nilai akhir berdasarkan bobot
+                    $nilaiAkhir = 0;
+                    $totalBobot = 0;
 
                     foreach ($jenisUjianList as $ju) {
                         $n = $nilaiPerMapel->where('jenis_ujian_id', $ju->id)->first();
                         if ($n) {
-                            if (strpos($ju->nama, 'Tulis') !== false || strpos($ju->nama, 'Harian') !== false) {
-                                $nilaiTulis = $n->nilai;
-                            } elseif (strpos($ju->nama, 'Lisan') !== false || strpos($ju->nama, 'Praktik') !== false) {
-                                $nilaiLisan = $n->nilai;
-                            }
+                            $nilaiAkhir += $n->nilai * ($ju->bobot / 100);
+                            $totalBobot += $ju->bobot;
                         }
                     }
 
-                    $rataMapel = ($nilaiTulis + $nilaiLisan) / 2;
-                    $totalNilai += $rataMapel;
+                    // Kalau total bobot < 100, sesuaikan
+                    if ($totalBobot > 0 && $totalBobot < 100) {
+                        $nilaiAkhir = $nilaiAkhir * (100 / $totalBobot);
+                    }
+
+                    $nilaiAkhir = round($nilaiAkhir, 2);
+
+                    // Status lulus/gagal
+                    $status = $nilaiAkhir >= 70 ? 'ناجح' : 'راسب';
+
+                    $totalNilai += $nilaiAkhir;
                     $jumlahMapel++;
                 @endphp
                 <tr>
                     <td>{{ $mapel->nama_mapel }}</td>
-                    <td>{{ $nilaiTulis ?: '-' }}</td>
-                    <td>{{ $nilaiLisan ?: '-' }}</td>
-                    <td>{{ $rataMapel ?: '-' }}</td>
-                    <td>{{ $rataMapel >= 70 ? 'ناجح' : ($rataMapel ? 'راسب' : '-') }}</td>
-                    <td>{{ $rataMapel ?: '-' }}</td>
+                    @foreach ($jenisUjianList as $ju)
+                        @php $n = $nilaiPerMapel->where('jenis_ujian_id', $ju->id)->first(); @endphp
+                        <td>{{ $n ? number_format($n->nilai, 2) : '-' }}</td>
+                    @endforeach
+                    <td class="bold">{{ number_format($nilaiAkhir, 2) }}</td>
+                    <td class="bold">{{ $status }}</td>
+                    <td class="bold">{{ number_format($nilaiAkhir, 2) }}</td>
                 </tr>
             @endforeach
         </tbody>
         <tfoot>
             <tr style="background-color: #f0f0f0;">
-                <td colspan="5" class="bold">مجموع الدرجات</td>
-                <td>{{ $totalNilai }}</td>
+                <td colspan="{{ count($jenisUjianList) + 3 }}" class="bold">مجموع الدرجات</td>
+                <td>{{ number_format($totalNilai, 2) }}</td>
             </tr>
             <tr>
-                <td colspan="5" class="bold">الترتيب العلمي</td>
+                <td colspan="{{ count($jenisUjianList) + 3 }}" class="bold">الترتيب العلمي</td>
                 <td>.... من ......... طلاب</td>
             </tr>
         </tfoot>

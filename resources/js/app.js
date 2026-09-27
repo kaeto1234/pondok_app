@@ -1,3 +1,9 @@
+// ============ ALPINE.JS ============
+import Alpine from 'alpinejs';
+window.Alpine = Alpine;
+Alpine.start();
+
+// ============ JQUERY & SUMMERNOTE ============
 import './bootstrap';
 import $ from 'jquery';
 import 'summernote/dist/summernote-lite.min.css';

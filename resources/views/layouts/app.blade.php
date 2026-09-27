@@ -217,11 +217,26 @@
                     <ul class="space-y-2 text-gray-400 text-sm">
                         @forelse ($quickLinks as $link)
                             @php
-                                $url = $link->link
-                                    ? $link->link->url
-                                    : ($link->post
-                                        ? url('/' . $link->post->post->slug)
-                                        : '#');
+                                $url = '#';
+
+                                // Kalau punya submenu, ambil submenu pertama
+                                if ($link->children && $link->children->count() > 0) {
+                                    $firstChild = $link->children->first();
+
+                                    if ($firstChild->link) {
+                                        $url = $firstChild->link->url;
+                                    } elseif ($firstChild->post && $firstChild->post->post) {
+                                        $url = url('/' . $firstChild->post->post->slug);
+                                    }
+                                }
+                                // Kalau tidak punya submenu, pakai link menu itu sendiri
+                                else {
+                                    if ($link->link) {
+                                        $url = $link->link->url;
+                                    } elseif ($link->post && $link->post->post) {
+                                        $url = url('/' . $link->post->post->slug);
+                                    }
+                                }
                             @endphp
                             <li>
                                 <a href="{{ $url }}"
@@ -321,7 +336,7 @@
             <!-- Copyright -->
             <div class="border-t border-gray-800 mt-10 pt-6 text-center text-gray-500 text-sm">
                 &copy; {{ date('Y') }} {{ $yayasan->nama_yayasan }}
-        </div>
+            </div>
     </footer>
     <script>
         const darkModeToggle = document.getElementById('darkModeToggle');
