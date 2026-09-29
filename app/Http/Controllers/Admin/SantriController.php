@@ -106,4 +106,43 @@ class SantriController extends Controller
         return redirect()->route('admin.santri.index')
             ->with('success', 'Data santri berhasil dihapus.');
     }
+    public function trash()
+    {
+        $santri = Santri::onlyTrashed()
+            ->with(['santriTingkat.tingkat'])
+            ->latest('deleted_at')
+            ->paginate(15);
+
+        return view('admin.santri.trash', compact('santri'));
+    }
+
+    /**
+     * Restore data santri yang terhapus
+     */
+    public function restore($id)
+    {
+        $santri = Santri::onlyTrashed()->findOrFail($id);
+        $santri->restore();
+
+        return redirect()->route('admin.santri.trash')
+            ->with('success', 'Data santri berhasil di-restore.');
+    }
+
+    /**
+     * Hapus permanen data santri
+     */
+    public function forceDelete($id)
+    {
+        $santri = Santri::onlyTrashed()->findOrFail($id);
+        
+        // Optional: hapus file foto kalau ada
+        if ($santri->foto) {
+            \Storage::disk('public')->delete($santri->foto);
+        }
+        
+        $santri->forceDelete();
+
+        return redirect()->route('admin.santri.trash')
+            ->with('success', 'Data santri berhasil dihapus permanen.');
+    }
 }

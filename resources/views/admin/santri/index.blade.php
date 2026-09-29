@@ -88,4 +88,16 @@
         <div class="px-6 py-4 border-t bg-gray-50">{{ $santri->links() }}</div>
     @endif
 </div>
+<div class="mb-6 flex justify-between items-center">
+    <div>
+        <h1 class="text-2xl font-bold text-gray-800">Manajemen Santri</h1>
+        <p class="text-sm text-gray-500 mt-1">Kelola data santri</p>
+    </div>
+    <div class="flex gap-2">
+        <a href="{{ route('admin.santri.trash') }}"
+            class="bg-red-100 text-red-700 px-4 py-2 rounded-lg hover:bg-red-200 transition">
+            <i class="fas fa-trash mr-2"></i> Lihat Trash
+        </a>
+    </div>
+</div>
 @endsection
